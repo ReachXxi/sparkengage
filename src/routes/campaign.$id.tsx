@@ -4,6 +4,8 @@ import { Flag, Users, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { StageShell } from "@/components/stage/StageShell";
 import { StreamModule } from "@/components/stage/StreamModule";
+import { AlbumModule } from "@/components/stage/AlbumModule";
+
 import { QuizModule } from "@/components/stage/QuizModule";
 import { GamesModule } from "@/components/stage/GamesModule";
 import { SocialModule } from "@/components/stage/SocialModule";
