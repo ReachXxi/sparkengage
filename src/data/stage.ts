@@ -214,7 +214,7 @@ const oriadeAlbum: AlbumInfo = {
     criticism:
       "Mixed reviews argue the 13-track run plays it too safe and lacks the explosive street anthems of blockbusters like A Good Time or Timeless.",
   },
-  cover: oriadeImg,
+  cover: oriadeArtwork,
 };
 
 
