@@ -144,7 +144,7 @@ const board = (seed: number) =>
     .map((name, i) => ({ name, points: 4200 - i * 137 - seed * 11 }))
     .sort((a, b) => b.points - a.points);
 
-/** Real, working links to the Oriade album across every major platform. */
+/** Real, working links to the ORIADÉ album across every major platform. */
 const oriadeLinks = {
   spotify: "https://open.spotify.com/search/Davido%20ORIADE",
   apple: "https://music.apple.com/us/search?term=Davido%20ORIADE",
@@ -815,12 +815,12 @@ export const funFacts = [
 export const rewards = [
   {
     id: "r1",
-    title: "Oriade Digital Collectible",
+    title: "ORIADÉ Digital Collectible",
     category: "Exclusive Content",
     cost: 500,
     stock: 120,
     emoji: "🖼️",
-    description: "Limited 1-of-500 Oriade cover art, digitally signed.",
+    description: "Limited 1-of-500 ORIADÉ cover art, digitally signed.",
   },
   {
     id: "r2",
@@ -833,7 +833,7 @@ export const rewards = [
   },
   {
     id: "r3",
-    title: "Oriade Deluxe Early Access",
+    title: "ORIADÉ Deluxe Early Access",
     category: "Music",
     cost: 300,
     stock: 999,
