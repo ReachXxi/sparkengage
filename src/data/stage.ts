@@ -142,12 +142,77 @@ const board = (seed: number) =>
 
 /** Real, working links to the Oriade album across every major platform. */
 const oriadeLinks = {
-  spotify: "https://open.spotify.com/search/Davido%20Oriade",
-  apple: "https://music.apple.com/us/search?term=Davido%20Oriade",
-  youtube: "https://www.youtube.com/results?search_query=Davido+Oriade+album",
-  audiomack: "https://audiomack.com/search?q=Davido%20Oriade",
-  boomplay: "https://www.boomplay.com/search/default/Davido%20Oriade",
+  spotify: "https://open.spotify.com/search/Davido%20ORIADE",
+  apple: "https://music.apple.com/us/search?term=Davido%20ORIADE",
+  youtube: "https://www.youtube.com/results?search_query=Davido+ORIADE+album",
+  audiomack: "https://audiomack.com/search?q=Davido%20ORIADE",
+  boomplay: "https://www.boomplay.com/search/default/Davido%20ORIADE",
 };
+
+/** ORIADÉ — Davido's sixth studio album, released 31 July 2026. 13 tracks, 9 features. */
+const oriadeAlbum: AlbumInfo = {
+  title: "ORIADÉ",
+  meaning: "From the Yoruba 'Ori' (destiny) and 'Adé' (crown) — the crowned head.",
+  releaseDate: "31 July 2026",
+  trackCount: 13,
+  featureCount: 9,
+  themes: ["Afrobeats", "3-Step", "Amapiano / Afro-house", "Yoruba introspection", "15 years of OBO"],
+  facts: [
+    {
+      label: "The vision",
+      body: "Davido's sixth studio album and a definitive celebration of 15 years in the business — less English-driven internationalism, more homage to his Yoruba roots and his own journey.",
+    },
+    {
+      label: "Shortest project yet",
+      body: "Breaking his habit of 17-plus track albums, ORIADÉ runs a concise 13 tracks with 9 features.",
+    },
+    {
+      label: "The 3-Step turn",
+      body: "Classic upbeat Afrobeats and romantic rhythms sit beside electronic experiments — Davido leaned heavily into 3-Step, the rising South African Afro-house subgenre, after extended stays in SA.",
+    },
+    {
+      label: "Global + local cast",
+      body: "Mayorkun, Fola, Llona and NO11 from Nigeria; Aya Nakamura (France/Mali), Leon Thomas (US R&B) and Black Sherif (Ghana); JAZZWRLD and GL_Ceejay repping South Africa.",
+    },
+    {
+      label: "Behind the pen",
+      body: "Peruzzi is credited as a key songwriter on standouts including 'Guide', 'I Know Who I Be' and 'Already Falling'.",
+    },
+  ],
+  tracklist: [
+    { no: 1, title: "On The Road" },
+    { no: 2, title: "Amazing Grace", features: "ft. Black Sherif" },
+    { no: 3, title: "Julie", note: "Smooth Afrobeats romance" },
+    { no: 4, title: "Constantly" },
+    {
+      no: 5,
+      title: "I Know Who I Be",
+      features: "with JAZZWRLD & GL_Ceejay",
+      note: "Lead single — 15-year reflection; video revisits his childhood home",
+    },
+    {
+      no: 6,
+      title: "Gimme Dat Ting",
+      features: "with NO11",
+      note: "Afrobeats fused with Amapiano and Afro-house cadences",
+    },
+    { no: 7, title: "B4 B4", features: "with Mayorkun & Fola", note: "Nostalgic reunion, early fan favourite" },
+    { no: 8, title: "Already Falling", note: "Co-written by Peruzzi" },
+    { no: 9, title: "Tell Everybody", features: "ft. Leon Thomas" },
+    { no: 10, title: "Yaya", features: "ft. Aya Nakamura", note: "Yoruba and French lyricism side by side" },
+    { no: 11, title: "Zanzibar" },
+    { no: 12, title: "Guide", note: "Co-written by Peruzzi" },
+    { no: 13, title: "My Light", features: "with Llona" },
+  ],
+  reception: {
+    praise:
+      "Fans and media have called it mature, cohesive and heartfelt — a more grounded, elevated vocal performance that chooses artistic evolution over chasing streaming trends.",
+    criticism:
+      "Mixed reviews argue the 13-track run plays it too safe and lacks the explosive street anthems of blockbusters like A Good Time or Timeless.",
+  },
+  cover: oriadeImg,
+};
+
 
 const owambePuzzle: PicsPuzzle = {
   id: "owambe",
