@@ -1,6 +1,9 @@
-import oriadeImg from "@/assets/oriade-album.jpg";
+import oriadeAsset from "@/assets/oriade-tracklist.png.asset.json";
 import movieImg from "@/assets/campaign-movie.jpg";
 import partyImg from "@/assets/campaign-party.jpg";
+
+const oriadeImg = oriadeAsset.url;
+
 
 import owambe1 from "@/assets/pics-owambe-1.jpg";
 import owambe2 from "@/assets/pics-owambe-2.jpg";
