@@ -13,8 +13,9 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Join the Oriade album takeover on SPARKFAN: stream on every platform, play Naija quizzes, 4 Pics 1 Word and lyric games, then cash your points for merch and tickets.",
+          "Join the ORIADÉ album takeover on SPARKFAN: stream Davido's 13-track sixth album on every platform, play Naija quizzes, 4 Pics 1 Word and lyric games, then cash your points for merch and tickets.",
       },
+
       { property: "og:title", content: "SPARKFAN — Stream, play & earn with Naija's biggest drops" },
       {
         property: "og:description",
