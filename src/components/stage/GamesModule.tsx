@@ -295,17 +295,23 @@ function GuessCelebrity({ campaign }: { campaign: Campaign }) {
   return (
     <Card title="Guess the Celeb" subtitle={`Afrobeats legends · ${game.points} pts`} fire={fire}>
       <RoundDots total={rounds.length} index={round} cleared={cleared} />
-      <div className="relative grid aspect-video place-items-center overflow-hidden rounded-2xl bg-stage">
+      <div className="relative grid aspect-[4/3] place-items-center overflow-hidden rounded-2xl bg-stage">
         <img
-          src={campaign.hero}
-          alt="Blurred celebrity clue"
+          key={game.id}
+          src={game.image}
+          alt={solved ? game.aka : "Blurred celebrity clue"}
           loading="lazy"
-          width={1280}
+          width={960}
           height={720}
-          className="absolute inset-0 size-full object-cover"
+          className="absolute inset-0 size-full scale-105 object-cover object-top"
           style={{ filter: `blur(${solved ? 0 : blur}px)` }}
         />
-        {!solved && <span className="relative text-5xl">🕵️</span>}
+        {!solved && <span className="relative text-5xl drop-shadow-lg">🕵️</span>}
+        {solved && (
+          <span className="absolute bottom-2 right-2 rounded-full bg-background/80 px-2 py-1 text-[10px] font-semibold text-muted-foreground">
+            {game.credit}
+          </span>
+        )}
       </div>
       <ul className="mt-3 space-y-1 text-sm font-semibold">
         {game.clues.slice(0, solved ? game.clues.length : cluesShown).map((c) => (
