@@ -1,4 +1,13 @@
 import oriadeAsset from "@/assets/oriade-tracklist.png.asset.json";
+import celebDavido from "@/assets/celeb-davido.jpg.asset.json";
+import celebMayorkun from "@/assets/celeb-mayorkun.jpg.asset.json";
+import celebBlackSherif from "@/assets/celeb-blacksherif.jpg.asset.json";
+import celebAya from "@/assets/celeb-ayanakamura.jpg.asset.json";
+import celebTiwa from "@/assets/celeb-tiwasavage.jpg.asset.json";
+import celebBurna from "@/assets/celeb-burnaboy.jpg.asset.json";
+import celebAsake from "@/assets/celeb-asake.jpg.asset.json";
+import celebAyra from "@/assets/celeb-ayrastarr.jpg.asset.json";
+import celebRema from "@/assets/celeb-rema.jpg.asset.json";
 import oriadeHero from "@/assets/oriade-album.jpg";
 import movieImg from "@/assets/campaign-movie.jpg";
 import partyImg from "@/assets/campaign-party.jpg";
@@ -69,6 +78,9 @@ export type CelebRound = {
   id: string;
   name: string;
   aka: string;
+  /** Real photo of the celebrity (Wikimedia Commons). */
+  image: string;
+  credit: string;
   clues: string[];
   points: number;
 };
@@ -456,6 +468,8 @@ export const campaigns: Campaign[] = [
         {
           id: "c1",
           name: "davido",
+          image: celebDavido.url,
+          credit: "Photo: Wikimedia Commons",
           aka: "OBO",
           clues: ["30 Billion Gang.", "E choke.", "Crowned his 15th year with ORIADÉ."],
           points: 30,
@@ -463,6 +477,8 @@ export const campaigns: Campaign[] = [
         {
           id: "c2",
           name: "mayorkun",
+          image: celebMayorkun.url,
+          credit: "Photo: Wikimedia Commons",
           aka: "Mayor of Lagos",
           clues: ["DMW's first son.", "Eleko.", "Reunited with OBO on 'B4 B4'."],
           points: 30,
@@ -470,6 +486,8 @@ export const campaigns: Campaign[] = [
         {
           id: "c3",
           name: "aya nakamura",
+          image: celebAya.url,
+          credit: "Photo: Wikimedia Commons",
           aka: "Djadja",
           clues: ["French-Malian superstar.", "Biggest French-language pop export.", "Sings on 'Yaya'."],
           points: 30,
@@ -477,6 +495,8 @@ export const campaigns: Campaign[] = [
         {
           id: "c4",
           name: "black sherif",
+          image: celebBlackSherif.url,
+          credit: "Photo: Wikimedia Commons",
           aka: "Blacko",
           clues: ["Ghanaian, Kwaku the Traveller.", "Konongo boy.", "Features on 'Amazing Grace'."],
           points: 30,
@@ -657,6 +677,8 @@ export const campaigns: Campaign[] = [
         {
           id: "c1",
           name: "burna",
+          image: celebBurna.url,
+          credit: "Photo: Wikimedia Commons",
           aka: "African Giant",
           clues: ["Twice As Tall.", "Port Harcourt boy.", "Grandfather managed Fela."],
           points: 30,
@@ -664,6 +686,8 @@ export const campaigns: Campaign[] = [
         {
           id: "c2",
           name: "asake",
+          image: celebAsake.url,
+          credit: "Photo: Wikimedia Commons",
           aka: "Mr Money",
           clues: ["Choir-style hooks.", "Amapiano meets fuji.", "Lonely at the top."],
           points: 30,
@@ -770,9 +794,29 @@ export const campaigns: Campaign[] = [
       celebrity: [
         {
           id: "c1",
-          name: "genevieve",
-          aka: "Nollywood royalty",
-          clues: ["Lionheart.", "One name is enough.", "Directed and starred in her own Netflix film."],
+          name: "tiwa",
+          image: celebTiwa.url,
+          credit: "Photo: Wikimedia Commons",
+          aka: "Tiwa Savage",
+          clues: ["Queen of Afrobeats.", "Wrote for Monica and Babyface before going solo.", "Water & Garri — she scored and starred in it."],
+          points: 30,
+        },
+        {
+          id: "c2",
+          name: "ayra",
+          image: celebAyra.url,
+          credit: "Photo: Wikimedia Commons",
+          aka: "Ayra Starr",
+          clues: ["Mavin's Celestial Being.", "Rush.", "Youngest African female act to hit 100M Spotify streams on one song."],
+          points: 30,
+        },
+        {
+          id: "c3",
+          name: "rema",
+          image: celebRema.url,
+          credit: "Photo: Wikimedia Commons",
+          aka: "Rema",
+          clues: ["Ravage.", "Benin City boy.", "Calm Down became the biggest Afrobeats song ever on Spotify."],
           points: 30,
         },
       ],
