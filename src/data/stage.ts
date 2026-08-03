@@ -66,6 +66,26 @@ export type CelebRound = {
   points: number;
 };
 
+export type AlbumTrack = {
+  no: number;
+  title: string;
+  features?: string;
+  note?: string;
+};
+
+export type AlbumInfo = {
+  title: string;
+  meaning: string;
+  releaseDate: string;
+  trackCount: number;
+  featureCount: number;
+  themes: string[];
+  facts: { label: string; body: string }[];
+  tracklist: AlbumTrack[];
+  reception: { praise: string; criticism: string };
+  cover: string;
+};
+
 export type Campaign = {
   id: string;
   title: string;
@@ -78,6 +98,7 @@ export type Campaign = {
   participants: number;
   actions: number;
   prize: string;
+  album?: AlbumInfo;
   streams: { platform: string; track: string; url: string; points: number }[];
   quiz: { title: string; subtitle: string; questions: QuizQuestion[] };
   personality?: {
@@ -94,6 +115,7 @@ export type Campaign = {
   social: SocialTask[];
   leaderboard: { name: string; points: number }[];
 };
+
 
 const names = [
   "AdaOnFire",
