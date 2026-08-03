@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Bell, Gamepad2, Home, LayoutDashboard, Trophy, User, Wallet } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useStage } from "@/lib/stage-store";
+import logoAsset from "@/assets/sparkfan-logo.png.asset.json";
 import { cn } from "@/lib/utils";
 
 
@@ -21,7 +22,8 @@ export function StageNav() {
     <>
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
         <nav className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4">
-          <Link to="/" className="font-display text-2xl font-bold tracking-tighter">
+          <Link to="/" className="flex items-center gap-2 font-display text-2xl font-bold tracking-tighter">
+            <img src={logoAsset.url} alt="SPARKFAN logo" width={36} height={36} className="size-9 rounded-lg" />
             <span className="text-stage">SPARKFAN</span>
           </Link>
           <div className="hidden items-center gap-1 md:flex">
@@ -40,10 +42,10 @@ export function StageNav() {
           </div>
           <div className="ml-auto flex items-center gap-2">
             <Link
-              to="/dashboard"
+              to="/admin"
               className="hidden items-center gap-2 rounded-full border border-border px-3 py-2 text-sm font-semibold hover:bg-muted sm:flex"
             >
-              <LayoutDashboard className="size-4" /> Creator
+              <LayoutDashboard className="size-4" /> Admin
             </Link>
             <Link
               to="/wallet"
@@ -128,7 +130,7 @@ export function StageShell({ children }: { children: React.ReactNode }) {
       <footer className="mx-auto max-w-6xl px-4 py-10 text-sm text-muted-foreground">
         <p>
           SPARKFAN — gbedu, games and gifts. No wahala.{" "}
-          <Link to="/dashboard" className="font-semibold text-primary">Creator dashboard</Link>
+          <Link to="/admin" className="font-semibold text-primary">Creator dashboard</Link>
 
         </p>
       </footer>
