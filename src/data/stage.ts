@@ -372,11 +372,11 @@ export const campaigns: Campaign[] = [
           explainer: "Track 13: 'My Light' with Llona. 'On The Road' opens it.",
         },
       ],
-
     },
     personality: {
-      title: "Which Oriade track are you?",
+      title: "Which ORIADÉ track are you?",
       subtitle: "Answer honestly. We will know if you're forming.",
+
       questions: [
         {
           id: "p1",
