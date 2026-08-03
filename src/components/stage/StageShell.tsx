@@ -42,7 +42,7 @@ export function StageNav() {
           </div>
           <div className="ml-auto flex items-center gap-2">
             <Link
-              to="/admin"
+              to="/dashboard"
               className="hidden items-center gap-2 rounded-full border border-border px-3 py-2 text-sm font-semibold hover:bg-muted sm:flex"
             >
               <LayoutDashboard className="size-4" /> Admin
@@ -130,7 +130,7 @@ export function StageShell({ children }: { children: React.ReactNode }) {
       <footer className="mx-auto max-w-6xl px-4 py-10 text-sm text-muted-foreground">
         <p>
           SPARKFAN — gbedu, games and gifts. No wahala.{" "}
-          <Link to="/admin" className="font-semibold text-primary">Creator dashboard</Link>
+          <Link to="/dashboard" className="font-semibold text-primary">Creator dashboard</Link>
 
         </p>
       </footer>
