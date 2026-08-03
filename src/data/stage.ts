@@ -426,26 +426,26 @@ export const campaigns: Campaign[] = [
       ],
       results: {
         gbedu: {
-          title: "You are 'Gbedu Nation' 🔊",
-          body: "Loud, unbothered, built for stadium speakers. Your neighbours know all your songs against their will.",
+          title: "You are 'Gimme Dat Ting' (with NO11) 🔊",
+          body: "High-energy, Amapiano log drums, zero chill. Your neighbours know all your songs against their will.",
         },
         soft: {
-          title: "You are 'Soft Life (Interlude)' 🕊️",
-          body: "Smooth, low-stress, allergic to drama. You'd rather cruise with the windows down than argue online.",
+          title: "You are 'Julie' 🕊️",
+          body: "Smooth Afrobeats romance, low-stress, allergic to drama. Windows down, no arguing online.",
         },
         hustle: {
-          title: "You are 'Lagos Money' 💼",
-          body: "Every song is a business plan to you. You'll be at the party — but you're leaving by 1am, you have alerts to chase.",
+          title: "You are 'I Know Who I Be' (with JAZZWRLD & GL_Ceejay) 💼",
+          body: "Reflective and locked in. Every song is a business plan — you'll show up, but you're leaving by 1am.",
         },
       },
     },
     games: {
       unscramble: [
-        { id: "u1", line: "if you no get money hide your face", song: "If", artist: "Davido", points: 25 },
-        { id: "u2", line: "thirty billion for the account", song: "If (Remix era)", artist: "Davido", points: 25 },
-        { id: "u3", line: "my people dey pray for me", song: "Ojuelegba", artist: "Wizkid", points: 25 },
-        { id: "u4", line: "baby calm down calm down", song: "Calm Down", artist: "Rema", points: 20 },
-        { id: "u5", line: "lonely at the top", song: "Lonely At The Top", artist: "Asake", points: 20 },
+        { id: "u1", line: "i know who i be", song: "I Know Who I Be", artist: "Davido, JAZZWRLD & GL_Ceejay", points: 25 },
+        { id: "u2", line: "gimme dat ting baby", song: "Gimme Dat Ting", artist: "Davido & NO11", points: 25 },
+        { id: "u3", line: "we dey do am like before before", song: "B4 B4", artist: "Davido, Mayorkun & Fola", points: 25 },
+        { id: "u4", line: "tell everybody say i dey alright", song: "Tell Everybody", artist: "Davido & Leon Thomas", points: 20 },
+        { id: "u5", line: "my light no go quench", song: "My Light", artist: "Davido & Llona", points: 20 },
       ],
       fourPics: [owambePuzzle, danfoPuzzle, suyaPuzzle],
       celebrity: [
@@ -453,25 +453,33 @@ export const campaigns: Campaign[] = [
           id: "c1",
           name: "davido",
           aka: "OBO",
-          clues: ["30 Billion Gang.", "E choke.", "Omo Baba Olowo from Atlanta to Lagos."],
+          clues: ["30 Billion Gang.", "E choke.", "Crowned his 15th year with ORIADÉ."],
           points: 30,
         },
         {
           id: "c2",
-          name: "wizkid",
-          aka: "Star Boy",
-          clues: ["Ojuelegba to the world.", "Made In Lagos.", "Grammy for Essence."],
+          name: "mayorkun",
+          aka: "Mayor of Lagos",
+          clues: ["DMW's first son.", "Eleko.", "Reunited with OBO on 'B4 B4'."],
           points: 30,
         },
         {
           id: "c3",
-          name: "tems",
-          aka: "Temilade",
-          clues: ["Husky voice, no stress.", "Essence.", "Wrote for Beyoncé's Lion King album."],
+          name: "aya nakamura",
+          aka: "Djadja",
+          clues: ["French-Malian superstar.", "Biggest French-language pop export.", "Sings on 'Yaya'."],
+          points: 30,
+        },
+        {
+          id: "c4",
+          name: "black sherif",
+          aka: "Blacko",
+          clues: ["Ghanaian, Kwaku the Traveller.", "Konongo boy.", "Features on 'Amazing Grace'."],
           points: 30,
         },
       ],
     },
+
     social: [
       {
         id: "s1",
