@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Spin daily, play Nigerian quizzes and games, earn points and redeem merch, tickets and exclusive drops.",
+          "Join the ORIADÉ album takeover on SPARKFAN: stream Davido's 13-track sixth album on every platform, play Naija quizzes, 4 Pics 1 Word and lyric games, then cash your points for merch and tickets.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

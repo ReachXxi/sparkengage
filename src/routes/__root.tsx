@@ -79,18 +79,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "SPARKFAN — fan engagement that's actually fun" },
+      { title: "SPARKFAN — Stream, play & earn with Naija's biggest drops" },
       {
         name: "description",
-        content: "Creator campaigns, daily spins, quizzes, games and real rewards.",
+        content: "Join the ORIADÉ album takeover on SPARKFAN: stream Davido's 13-track sixth album on every platform, play Naija quizzes, 4 Pics 1 Word and lyric games, then cash your points for merch and tickets.",
       },
-      { property: "og:title", content: "SPARKFAN — fan engagement that's actually fun" },
+      { property: "og:title", content: "SPARKFAN — Stream, play & earn with Naija's biggest drops" },
       {
         property: "og:description",
-        content: "Creator campaigns, daily spins, quizzes, games and real rewards.",
+        content: "Join the ORIADÉ album takeover on SPARKFAN: stream Davido's 13-track sixth album on every platform, play Naija quizzes, 4 Pics 1 Word and lyric games, then cash your points for merch and tickets.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "SPARKFAN — Stream, play & earn with Naija's biggest drops" },
+      { name: "twitter:description", content: "Join the ORIADÉ album takeover on SPARKFAN: stream Davido's 13-track sixth album on every platform, play Naija quizzes, 4 Pics 1 Word and lyric games, then cash your points for merch and tickets." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/8fd17683-b495-4625-918c-c5aba0f63b5f" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/8fd17683-b495-4625-918c-c5aba0f63b5f" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
