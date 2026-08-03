@@ -515,7 +515,6 @@ export const campaigns: Campaign[] = [
       },
     ],
 
-    ],
     leaderboard: board(0),
   },
   {
