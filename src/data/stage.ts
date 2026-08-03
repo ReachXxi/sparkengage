@@ -241,23 +241,30 @@ const suyaPuzzle: PicsPuzzle = {
 export const campaigns: Campaign[] = [
   {
     id: "oriade-album",
-    title: "Davido — Oriade Album Takeover",
+    title: "Davido — ORIADÉ Album Takeover",
     creator: "Davido Music Worldwide",
     type: "Album Launch",
     description:
-      "Oriade don land. Stream it on any platform, unscramble the hooks, guess the legends and drag your whole group chat in.",
+      "ORIADÉ don land — 13 tracks, 9 features, 15 years of OBO. Stream it on every platform, unscramble the hooks, guess the legends and drag your whole group chat in.",
     hero: oriadeImg,
     live: true,
     endsAt: new Date(Date.now() + 1000 * 60 * 60 * 52).toISOString(),
     participants: 41237,
     actions: 189025,
-    prize: "Top 50 get Oriade digital collectibles · Top 3 get signed vinyl + 30 Billion Gang merch",
+    prize: "Top 50 get ORIADÉ digital collectibles · Top 3 get signed vinyl + 30 Billion Gang merch",
+    album: oriadeAlbum,
     streams: [
-      { platform: "Spotify", track: "Oriade — Full Album", url: oriadeLinks.spotify, points: 12 },
-      { platform: "Apple Music", track: "Oriade — Full Album", url: oriadeLinks.apple, points: 12 },
-      { platform: "YouTube", track: "Oriade — Official Visualiser", url: oriadeLinks.youtube, points: 10 },
-      { platform: "Audiomack", track: "Oriade — Deluxe Edition", url: oriadeLinks.audiomack, points: 10 },
-      { platform: "Boomplay", track: "Oriade — Full Album", url: oriadeLinks.boomplay, points: 10 },
+      { platform: "Spotify", track: "ORIADÉ — Full Album (13 tracks)", url: oriadeLinks.spotify, points: 12 },
+      { platform: "Apple Music", track: "ORIADÉ — Full Album", url: oriadeLinks.apple, points: 12 },
+      {
+        platform: "YouTube",
+        track: "I Know Who I Be (with JAZZWRLD & GL_Ceejay) — Official Video",
+        url: oriadeLinks.youtube,
+        points: 10,
+      },
+      { platform: "Audiomack", track: "Gimme Dat Ting (with NO11)", url: oriadeLinks.audiomack, points: 10 },
+      { platform: "Boomplay", track: "B4 B4 (with Mayorkun & Fola)", url: oriadeLinks.boomplay, points: 10 },
+
     ],
     quiz: {
       title: "How Davido are you, really?",
