@@ -1,8 +1,12 @@
 import oriadeAsset from "@/assets/oriade-tracklist.png.asset.json";
+import oriadeHero from "@/assets/oriade-album.jpg";
 import movieImg from "@/assets/campaign-movie.jpg";
 import partyImg from "@/assets/campaign-party.jpg";
 
-const oriadeImg = oriadeAsset.url;
+/** Official ORIADÉ tracklist artwork (uploaded). */
+const oriadeArtwork = oriadeAsset.url;
+const oriadeImg = oriadeHero;
+
 
 
 import owambe1 from "@/assets/pics-owambe-1.jpg";
