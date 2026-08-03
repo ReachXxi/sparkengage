@@ -101,18 +101,24 @@ function CampaignPage() {
           </div>
         </section>
 
-        <Tabs defaultValue="stream">
+        <Tabs defaultValue={campaign.album ? "album" : "stream"}>
           <TabsList className="w-full justify-start overflow-x-auto rounded-full bg-muted p-1">
-            {["stream", "quiz", "games", "social", "leaderboard"].map((t) => (
+            {[...(campaign.album ? ["album"] : []), "stream", "quiz", "games", "social", "leaderboard"].map((t) => (
               <TabsTrigger key={t} value={t} className="rounded-full px-4 font-bold capitalize">
                 {t === "social" ? "Social Tasks" : t}
               </TabsTrigger>
             ))}
           </TabsList>
           <div className="mt-5">
+            {campaign.album ? (
+              <TabsContent value="album">
+                <AlbumModule campaign={campaign} />
+              </TabsContent>
+            ) : null}
             <TabsContent value="stream">
               <StreamModule campaign={campaign} />
             </TabsContent>
+
             <TabsContent value="quiz">
               <QuizModule campaign={campaign} />
             </TabsContent>
