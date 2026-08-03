@@ -479,7 +479,6 @@ export const campaigns: Campaign[] = [
         },
       ],
     },
-
     social: [
       {
         id: "s1",
@@ -493,16 +492,16 @@ export const campaigns: Campaign[] = [
         id: "s2",
         platform: "X",
         actionType: "retweet",
-        label: "Tweet that Oriade is out",
+        label: "Tweet your favourite ORIADÉ track",
         targetUrl:
-          "https://x.com/intent/post?text=ORIADE%20is%20out%20now.%20Streaming%20it%20on%20SPARKFAN%20and%20collecting%20my%20points%20%F0%9F%94%A5",
+          "https://x.com/intent/post?text=ORIADE%20is%20out%20now%20%E2%80%94%2013%20tracks%2C%2015%20years%20of%20OBO.%20Streaming%20it%20on%20SPARKFAN%20and%20collecting%20my%20points%20%F0%9F%91%91",
         points: 20,
       },
       {
         id: "s3",
         platform: "Instagram",
         actionType: "like",
-        label: "Like the Oriade cover art post",
+        label: "Like the ORIADÉ tracklist post",
         targetUrl: "https://www.instagram.com/davido/",
         points: 10,
       },
@@ -510,10 +509,12 @@ export const campaigns: Campaign[] = [
         id: "s4",
         platform: "TikTok",
         actionType: "share",
-        label: "Post your #OriadeChallenge dance",
+        label: "Post your #GimmeDatTing dance",
         targetUrl: "https://www.tiktok.com/tag/oriade",
         points: 40,
       },
+    ],
+
     ],
     leaderboard: board(0),
   },
