@@ -24,7 +24,9 @@ export const Route = createFileRoute("/admin/settings")({
 });
 
 function Settings() {
-  const { tenant, tenants, campaigns, engagers, addTenant, setTenant } = useAdmin();
+  const { tenant, state, campaigns, engagers, addTenant, setTenant } = useAdmin();
+  const tenants = state.tenants;
+
   const [name, setName] = useState("");
   const [industry, setIndustry] = useState("Music");
 
