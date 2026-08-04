@@ -45,9 +45,10 @@ function Leaderboard() {
                   <p className="truncate font-semibold">{e.fan}</p>
                   <p className="text-xs text-muted-foreground">{e.city}</p>
                 </div>
-                <Pill tone="solid" className="ml-auto">
-                  {e.points.toLocaleString()} pts
-                </Pill>
+                <span className="ml-auto">
+                  <Pill tone="solid">{e.points.toLocaleString()} pts</Pill>
+                </span>
+
               </div>
               <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
                 <span>{e.actions.toLocaleString()} actions</span>
