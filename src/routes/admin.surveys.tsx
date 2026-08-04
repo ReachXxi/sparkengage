@@ -60,9 +60,19 @@ function Surveys() {
   };
 
   const save = () => {
-    if (!title.trim()) return toast.error("Give the survey a title.");
-    if (!campaignId) return toast.error("Attach the survey to a campaign.");
-    if (!questions.length) return toast.error("Add at least one question.");
+    if (!title.trim()) {
+      toast.error("Give the survey a title.");
+      return;
+    }
+    if (!campaignId) {
+      toast.error("Attach the survey to a campaign.");
+      return;
+    }
+    if (!questions.length) {
+      toast.error("Add at least one question.");
+      return;
+    }
+
     addSurvey({ title, description, campaignId, questions });
     setTitle("");
     setDescription("");
