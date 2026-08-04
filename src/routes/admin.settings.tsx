@@ -98,7 +98,14 @@ function Settings() {
                     toast.error("Name the workspace first.");
                     return;
                   }
-                  addTenant(name, industry);
+                  addTenant({
+                    name,
+                    slug: name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+                    industry,
+                    plan: "Pro",
+                    emoji: "✦",
+                  });
+
                   setName("");
                   toast.success("Workspace created and activated");
                 }}
