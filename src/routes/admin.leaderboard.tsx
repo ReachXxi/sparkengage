@@ -29,7 +29,7 @@ function Leaderboard() {
       <div className="space-y-6">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <Metric label="Ranked fans" value={ranked.length.toLocaleString()} />
-          <Metric label="Top engager" value={top?.fan ?? "—"} hint={top ? `${top.points.toLocaleString()} pts` : undefined} />
+          <Metric label="Top engager" value={top?.fan ?? "—"} hint={top ? `${top.points.toLocaleString()} pts` : ""} />
           <Metric label="Total points" value={ranked.reduce((a, r) => a + r.points, 0).toLocaleString()} />
           <Metric label="Referrals" value={ranked.reduce((a, r) => a + r.referrals, 0).toLocaleString()} />
         </div>

@@ -18,6 +18,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminCampaignsRouteImport } from './routes/admin.campaigns'
+import { Route as AdminLeaderboardRouteImport } from './routes/admin.leaderboard'
 import { Route as AdminResponsesRouteImport } from './routes/admin.responses'
 import { Route as AdminResultsRouteImport } from './routes/admin.results'
 import { Route as AdminRewardsRouteImport } from './routes/admin.rewards'
@@ -70,6 +71,11 @@ const AdminCampaignsRoute = AdminCampaignsRouteImport.update({
   path: '/campaigns',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminLeaderboardRoute = AdminLeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminResponsesRoute = AdminResponsesRouteImport.update({
   id: '/responses',
   path: '/responses',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
   '/admin/campaigns': typeof AdminCampaignsRouteWithChildren
+  '/admin/leaderboard': typeof AdminLeaderboardRoute
   '/admin/responses': typeof AdminResponsesRoute
   '/admin/results': typeof AdminResultsRoute
   '/admin/rewards': typeof AdminRewardsRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
   '/admin/campaigns': typeof AdminCampaignsRouteWithChildren
+  '/admin/leaderboard': typeof AdminLeaderboardRoute
   '/admin/responses': typeof AdminResponsesRoute
   '/admin/results': typeof AdminResultsRoute
   '/admin/rewards': typeof AdminRewardsRoute
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
   '/admin/campaigns': typeof AdminCampaignsRouteWithChildren
+  '/admin/leaderboard': typeof AdminLeaderboardRoute
   '/admin/responses': typeof AdminResponsesRoute
   '/admin/results': typeof AdminResultsRoute
   '/admin/rewards': typeof AdminRewardsRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/wallet'
     | '/admin/campaigns'
+    | '/admin/leaderboard'
     | '/admin/responses'
     | '/admin/results'
     | '/admin/rewards'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/wallet'
     | '/admin/campaigns'
+    | '/admin/leaderboard'
     | '/admin/responses'
     | '/admin/results'
     | '/admin/rewards'
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/wallet'
     | '/admin/campaigns'
+    | '/admin/leaderboard'
     | '/admin/responses'
     | '/admin/results'
     | '/admin/rewards'
@@ -281,6 +293,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCampaignsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/leaderboard': {
+      id: '/admin/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/admin/leaderboard'
+      preLoaderRoute: typeof AdminLeaderboardRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/responses': {
       id: '/admin/responses'
       path: '/responses'
@@ -340,6 +359,7 @@ const AdminCampaignsRouteWithChildren = AdminCampaignsRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminCampaignsRoute: typeof AdminCampaignsRouteWithChildren
+  AdminLeaderboardRoute: typeof AdminLeaderboardRoute
   AdminResponsesRoute: typeof AdminResponsesRoute
   AdminResultsRoute: typeof AdminResultsRoute
   AdminRewardsRoute: typeof AdminRewardsRoute
@@ -349,6 +369,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminCampaignsRoute: AdminCampaignsRouteWithChildren,
+  AdminLeaderboardRoute: AdminLeaderboardRoute,
   AdminResponsesRoute: AdminResponsesRoute,
   AdminResultsRoute: AdminResultsRoute,
   AdminRewardsRoute: AdminRewardsRoute,
