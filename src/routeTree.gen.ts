@@ -19,6 +19,7 @@ import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminCampaignsRouteImport } from './routes/admin.campaigns'
 import { Route as AdminResponsesRouteImport } from './routes/admin.responses'
+import { Route as AdminResultsRouteImport } from './routes/admin.results'
 import { Route as AdminRewardsRouteImport } from './routes/admin.rewards'
 import { Route as AdminSurveysRouteImport } from './routes/admin.surveys'
 import { Route as CampaignIdRouteImport } from './routes/campaign.$id'
@@ -74,6 +75,11 @@ const AdminResponsesRoute = AdminResponsesRouteImport.update({
   path: '/responses',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminResultsRoute = AdminResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminRewardsRoute = AdminRewardsRouteImport.update({
   id: '/rewards',
   path: '/rewards',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/wallet': typeof WalletRoute
   '/admin/campaigns': typeof AdminCampaignsRouteWithChildren
   '/admin/responses': typeof AdminResponsesRoute
+  '/admin/results': typeof AdminResultsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/surveys': typeof AdminSurveysRoute
   '/campaign/$id': typeof CampaignIdRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/wallet': typeof WalletRoute
   '/admin/campaigns': typeof AdminCampaignsRouteWithChildren
   '/admin/responses': typeof AdminResponsesRoute
+  '/admin/results': typeof AdminResultsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/surveys': typeof AdminSurveysRoute
   '/campaign/$id': typeof CampaignIdRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/wallet': typeof WalletRoute
   '/admin/campaigns': typeof AdminCampaignsRouteWithChildren
   '/admin/responses': typeof AdminResponsesRoute
+  '/admin/results': typeof AdminResultsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/surveys': typeof AdminSurveysRoute
   '/campaign/$id': typeof CampaignIdRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/admin/campaigns'
     | '/admin/responses'
+    | '/admin/results'
     | '/admin/rewards'
     | '/admin/surveys'
     | '/campaign/$id'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/admin/campaigns'
     | '/admin/responses'
+    | '/admin/results'
     | '/admin/rewards'
     | '/admin/surveys'
     | '/campaign/$id'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/admin/campaigns'
     | '/admin/responses'
+    | '/admin/results'
     | '/admin/rewards'
     | '/admin/surveys'
     | '/campaign/$id'
@@ -276,6 +288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminResponsesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/results': {
+      id: '/admin/results'
+      path: '/results'
+      fullPath: '/admin/results'
+      preLoaderRoute: typeof AdminResultsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/rewards': {
       id: '/admin/rewards'
       path: '/rewards'
@@ -322,6 +341,7 @@ const AdminCampaignsRouteWithChildren = AdminCampaignsRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminCampaignsRoute: typeof AdminCampaignsRouteWithChildren
   AdminResponsesRoute: typeof AdminResponsesRoute
+  AdminResultsRoute: typeof AdminResultsRoute
   AdminRewardsRoute: typeof AdminRewardsRoute
   AdminSurveysRoute: typeof AdminSurveysRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -330,6 +350,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminCampaignsRoute: AdminCampaignsRouteWithChildren,
   AdminResponsesRoute: AdminResponsesRoute,
+  AdminResultsRoute: AdminResultsRoute,
   AdminRewardsRoute: AdminRewardsRoute,
   AdminSurveysRoute: AdminSurveysRoute,
   AdminIndexRoute: AdminIndexRoute,
