@@ -134,7 +134,7 @@ function Campaigns() {
             className="rounded-full font-bold"
             onClick={() => {
               const target = campaigns[0];
-              if (!target) return toast.error("Create a campaign first.");
+              if (!target) { toast.error("Create a campaign first."); return; }
               draftRewards(target).forEach((r) => actions.saveReward(r));
               actions.log("AI generated rewards", `${target.name} · 5 rewards`);
               toast.success("5 rewards drafted for " + target.name);
@@ -147,7 +147,7 @@ function Campaigns() {
             className="rounded-full font-bold"
             onClick={() => {
               const target = campaigns[0];
-              if (!target) return toast.error("Create a campaign first.");
+              if (!target) { toast.error("Create a campaign first."); return; }
               const sv = surveys.find((s) => s.campaignId === target.id);
               const questions = draftSurveyQuestions(target);
               if (sv) {
