@@ -206,3 +206,88 @@
   border-radius: 2px;
   animation: stage-confetti 1.6s ease-in forwards;
 }
+
+/* ------------------------------------------------------------------ */
+/* Creator console (admin) palette — cool blue / soft purple / gold    */
+/* ------------------------------------------------------------------ */
+
+:root {
+  /* #4F6FF7 */
+  --brand: oklch(0.611 0.195 267.8);
+  /* #7B93FA */
+  --brand-light: oklch(0.706 0.137 269.2);
+  /* #7C6BEA */
+  --brand-purple: oklch(0.601 0.176 287.6);
+  /* #D4AF37 */
+  --gold: oklch(0.762 0.117 86.2);
+  /* #4CAF84 */
+  --ok: oklch(0.686 0.107 158.5);
+  /* #E8A83C */
+  --warn: oklch(0.771 0.129 76.6);
+  /* #E8606C */
+  --bad: oklch(0.661 0.164 18.9);
+  /* #F5F6FA */
+  --console-bg: oklch(0.972 0.005 274.6);
+  /* #1A1A2E */
+  --ink: oklch(0.229 0.036 279.1);
+  /* #4A4A6A */
+  --ink-2: oklch(0.408 0.041 283.4);
+  /* #7A7A9A */
+  --ink-3: oklch(0.564 0.041 285.1);
+
+  --gradient-brand: linear-gradient(135deg, var(--brand) 0%, var(--brand-purple) 100%);
+  --gradient-gold: linear-gradient(135deg, var(--gold) 0%, oklch(0.82 0.1 92) 100%);
+  --shadow-console: 0 8px 32px oklch(0.611 0.195 267.8 / 0.06);
+  --shadow-console-lg: 0 18px 50px oklch(0.611 0.195 267.8 / 0.12);
+}
+
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-light: var(--brand-light);
+  --color-brand-purple: var(--brand-purple);
+  --color-gold: var(--gold);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+  --color-console: var(--console-bg);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --radius-console: 24px;
+  --shadow-console: var(--shadow-console);
+  --shadow-console-lg: var(--shadow-console-lg);
+}
+
+@utility bg-brand-gradient {
+  background-image: var(--gradient-brand);
+}
+
+@utility bg-gold-gradient {
+  background-image: var(--gradient-gold);
+}
+
+@utility text-brand-gradient {
+  background-image: var(--gradient-brand);
+  background-clip: text;
+  color: transparent;
+}
+
+@utility glass {
+  background-color: oklch(1 0 0 / 0.62);
+  backdrop-filter: blur(16px);
+  border: 1px solid oklch(1 0 0 / 0.7);
+  box-shadow: var(--shadow-console);
+}
+
+@utility glass-dark {
+  background-color: oklch(0.229 0.036 279.1 / 0.55);
+  backdrop-filter: blur(16px);
+  border: 1px solid oklch(1 0 0 / 0.12);
+}
+
+@utility console-card {
+  border-radius: 24px;
+  background-color: oklch(1 0 0);
+  border: 1px solid oklch(0.92 0.008 274);
+  box-shadow: var(--shadow-console);
+}
