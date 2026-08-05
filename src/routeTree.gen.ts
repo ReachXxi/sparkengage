@@ -10,16 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as GamesRouteImport } from './routes/games'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminCampaignsRouteImport } from './routes/admin.campaigns'
 import { Route as CampaignIdRouteImport } from './routes/campaign.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -47,6 +55,16 @@ const WalletRoute = WalletRouteImport.update({
   path: '/wallet',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCampaignsRoute = AdminCampaignsRouteImport.update({
+  id: '/campaigns',
+  path: '/campaigns',
+  getParentRoute: () => AdminRoute,
+} as any)
 const CampaignIdRoute = CampaignIdRouteImport.update({
   id: '/campaign/$id',
   path: '/campaign/$id',
@@ -55,12 +73,15 @@ const CampaignIdRoute = CampaignIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/games': typeof GamesRoute
   '/leaderboard': typeof LeaderboardRoute
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
+  '/admin/campaigns': typeof AdminCampaignsRoute
   '/campaign/$id': typeof CampaignIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -69,28 +90,36 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof LeaderboardRoute
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
+  '/admin/campaigns': typeof AdminCampaignsRoute
   '/campaign/$id': typeof CampaignIdRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/games': typeof GamesRoute
   '/leaderboard': typeof LeaderboardRoute
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
+  '/admin/campaigns': typeof AdminCampaignsRoute
   '/campaign/$id': typeof CampaignIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/dashboard'
     | '/games'
     | '/leaderboard'
     | '/profile'
     | '/wallet'
+    | '/admin/campaigns'
     | '/campaign/$id'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -99,20 +128,26 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/profile'
     | '/wallet'
+    | '/admin/campaigns'
     | '/campaign/$id'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/dashboard'
     | '/games'
     | '/leaderboard'
     | '/profile'
     | '/wallet'
+    | '/admin/campaigns'
     | '/campaign/$id'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   GamesRoute: typeof GamesRoute
   LeaderboardRoute: typeof LeaderboardRoute
@@ -128,6 +163,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -165,6 +207,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WalletRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/campaigns': {
+      id: '/admin/campaigns'
+      path: '/campaigns'
+      fullPath: '/admin/campaigns'
+      preLoaderRoute: typeof AdminCampaignsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/campaign/$id': {
       id: '/campaign/$id'
       path: '/campaign/$id'
@@ -175,8 +231,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminCampaignsRoute: typeof AdminCampaignsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminCampaignsRoute: AdminCampaignsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   DashboardRoute: DashboardRoute,
   GamesRoute: GamesRoute,
   LeaderboardRoute: LeaderboardRoute,
