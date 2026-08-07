@@ -9,12 +9,14 @@ import {
 } from "react";
 import {
   activities as seedActivities,
+  ads as seedAds,
+  newsletters as seedNewsletters,
   adjustments as seedAdjustments,
   campaigns as seedCampaigns,
-  celebrities,
+  celebrities as seedCelebrities,
   gameResults,
   logs as seedLogs,
-  quizQuestions,
+  quizQuestions as seedQuizQuestions,
   quizResults,
   rewards as seedRewards,
   socialTasks as seedSocialTasks,
@@ -25,7 +27,12 @@ import {
   tenants,
   users as seedUsers,
   type Activity,
+  type Ad,
   type Adjustment,
+  type Celebrity,
+  type Newsletter,
+  type QuizQuestion,
+  type SocialTask,
   type Campaign,
   type ConsoleUser,
   type LogEntry,
@@ -51,6 +58,11 @@ type State = {
   users: ConsoleUser[];
   adjustments: Adjustment[];
   logs: LogEntry[];
+  socialTasks: SocialTask[];
+  quizQuestions: QuizQuestion[];
+  celebrities: Celebrity[];
+  ads: Ad[];
+  newsletters: Newsletter[];
   liveTick: number;
 };
 
@@ -69,11 +81,14 @@ type Ctx = {
   users: ConsoleUser[];
   adjustments: Adjustment[];
   logs: LogEntry[];
+  socialTasks: SocialTask[];
+  ads: Ad[];
+  newsletters: Newsletter[];
   responses: typeof surveyResponses;
   quizResults: typeof quizResults;
   gameResults: typeof gameResults;
-  quizQuestions: typeof quizQuestions;
-  celebrities: typeof celebrities;
+  quizQuestions: QuizQuestion[];
+  celebrities: Celebrity[];
   leaderboard: (ConsoleUser & { rank: number; badge: string; live: number })[];
   actions: {
     log: (action: string, target: string, severity?: LogEntry["severity"]) => void;
@@ -95,6 +110,20 @@ type Ctx = {
     setStreamStatus: (id: string, status: Stream["status"]) => void;
     reviewSubmission: (id: string, status: Submission["status"]) => void;
     bulkReview: (taskId: string, status: Submission["status"]) => void;
+    saveSocialTask: (t: SocialTask) => void;
+    deleteSocialTask: (id: string) => void;
+    saveQuizQuestion: (q: QuizQuestion) => void;
+    deleteQuizQuestion: (id: string) => void;
+    saveCelebrity: (c: Celebrity) => void;
+    deleteCelebrity: (id: string) => void;
+    deleteActivity: (id: string) => void;
+    saveAd: (a: Ad) => void;
+    deleteAd: (id: string) => void;
+    setAdStatus: (id: string, status: Ad["status"]) => void;
+    featureAd: (id: string) => void;
+    saveNewsletter: (n: Newsletter) => void;
+    deleteNewsletter: (id: string) => void;
+    sendNewsletter: (id: string) => void;
     adjustPoints: (userId: string, delta: number, reason: string) => void;
     setUserStatus: (id: string, status: ConsoleUser["status"]) => void;
   };
@@ -113,6 +142,11 @@ const initialState: State = {
   users: seedUsers,
   adjustments: seedAdjustments,
   logs: seedLogs,
+  socialTasks: seedSocialTasks,
+  quizQuestions: seedQuizQuestions,
+  celebrities: seedCelebrities,
+  ads: seedAds,
+  newsletters: seedNewsletters,
   liveTick: 0,
 };
 
@@ -272,6 +306,72 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             x.taskId === taskId && x.status === "pending" ? { ...x, status } : x,
           ),
         })),
+      saveSocialTask: (t) =>
+        setState((s) => ({
+          ...s,
+          socialTasks: s.socialTasks.some((x) => x.id === t.id)
+            ? s.socialTasks.map((x) => (x.id === t.id ? t : x))
+            : [t, ...s.socialTasks],
+        })),
+      deleteSocialTask: (id) =>
+        setState((s) => ({ ...s, socialTasks: s.socialTasks.filter((x) => x.id !== id) })),
+      saveQuizQuestion: (q) =>
+        setState((s) => ({
+          ...s,
+          quizQuestions: s.quizQuestions.some((x) => x.id === q.id)
+            ? s.quizQuestions.map((x) => (x.id === q.id ? q : x))
+            : [q, ...s.quizQuestions],
+        })),
+      deleteQuizQuestion: (id) =>
+        setState((s) => ({ ...s, quizQuestions: s.quizQuestions.filter((x) => x.id !== id) })),
+      saveCelebrity: (c) =>
+        setState((s) => ({
+          ...s,
+          celebrities: s.celebrities.some((x) => x.id === c.id)
+            ? s.celebrities.map((x) => (x.id === c.id ? c : x))
+            : [c, ...s.celebrities],
+        })),
+      deleteCelebrity: (id) =>
+        setState((s) => ({ ...s, celebrities: s.celebrities.filter((x) => x.id !== id) })),
+      deleteActivity: (id) =>
+        setState((s) => ({ ...s, activities: s.activities.filter((a) => a.id !== id) })),
+      saveAd: (a) =>
+        setState((s) => ({
+          ...s,
+          ads: s.ads.some((x) => x.id === a.id) ? s.ads.map((x) => (x.id === a.id ? a : x)) : [a, ...s.ads],
+        })),
+      deleteAd: (id) => setState((s) => ({ ...s, ads: s.ads.filter((a) => a.id !== id) })),
+      setAdStatus: (id, status) =>
+        setState((s) => ({ ...s, ads: s.ads.map((a) => (a.id === id ? { ...a, status } : a)) })),
+      featureAd: (id) =>
+        setState((s) => ({
+          ...s,
+          ads: s.ads.map((a) => ({ ...a, featured: a.id === id })),
+        })),
+      saveNewsletter: (n) =>
+        setState((s) => ({
+          ...s,
+          newsletters: s.newsletters.some((x) => x.id === n.id)
+            ? s.newsletters.map((x) => (x.id === n.id ? n : x))
+            : [n, ...s.newsletters],
+        })),
+      deleteNewsletter: (id) =>
+        setState((s) => ({ ...s, newsletters: s.newsletters.filter((n) => n.id !== id) })),
+      sendNewsletter: (id) =>
+        setState((s) => ({
+          ...s,
+          newsletters: s.newsletters.map((n) =>
+            n.id === id
+              ? {
+                  ...n,
+                  status: "sent" as const,
+                  recipients: n.recipients || s.users.filter((u) => u.tenantId === s.tenantId).length * 120,
+                  opens: n.opens || Math.round((n.recipients || 1000) * 0.62),
+                  clicks: n.clicks || Math.round((n.recipients || 1000) * 0.24),
+                }
+              : n,
+          ),
+        })),
       adjustPoints: (userId, delta, reason) =>
         setState((s) => {
           const user = s.users.find((u) => u.id === userId);
@@ -345,11 +445,14 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     users: scopedUsers,
     adjustments: state.adjustments.filter((a) => a.tenantId === t),
     logs: state.logs.filter((l) => l.tenantId === t),
+    socialTasks: state.socialTasks.filter((x) => x.tenantId === t),
+    ads: state.ads.filter((a) => a.tenantId === t),
+    newsletters: state.newsletters.filter((n) => n.tenantId === t),
     responses: surveyResponses.filter((r) => r.tenantId === t),
     quizResults: quizResults.filter((r) => r.tenantId === t),
     gameResults: gameResults.filter((r) => r.tenantId === t),
-    quizQuestions,
-    celebrities,
+    quizQuestions: state.quizQuestions,
+    celebrities: state.celebrities,
     leaderboard,
     actions,
   };
