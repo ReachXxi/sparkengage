@@ -18,6 +18,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminActivitiesRouteImport } from './routes/admin.activities'
+import { Route as AdminAdsRouteImport } from './routes/admin.ads'
 import { Route as AdminCampaignsRouteImport } from './routes/admin.campaigns'
 import { Route as AdminEngagersRouteImport } from './routes/admin.engagers'
 import { Route as AdminGamesRouteImport } from './routes/admin.games'
@@ -74,6 +75,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const AdminActivitiesRoute = AdminActivitiesRouteImport.update({
   id: '/activities',
   path: '/activities',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdsRoute = AdminAdsRouteImport.update({
+  id: '/ads',
+  path: '/ads',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminCampaignsRoute = AdminCampaignsRouteImport.update({
@@ -146,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
   '/admin/activities': typeof AdminActivitiesRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/engagers': typeof AdminEngagersRoute
   '/admin/games': typeof AdminGamesRoute
@@ -168,6 +175,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
   '/admin/activities': typeof AdminActivitiesRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/engagers': typeof AdminEngagersRoute
   '/admin/games': typeof AdminGamesRoute
@@ -192,6 +200,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
   '/admin/activities': typeof AdminActivitiesRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/engagers': typeof AdminEngagersRoute
   '/admin/games': typeof AdminGamesRoute
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/wallet'
     | '/admin/activities'
+    | '/admin/ads'
     | '/admin/campaigns'
     | '/admin/engagers'
     | '/admin/games'
@@ -239,6 +249,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/wallet'
     | '/admin/activities'
+    | '/admin/ads'
     | '/admin/campaigns'
     | '/admin/engagers'
     | '/admin/games'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/wallet'
     | '/admin/activities'
+    | '/admin/ads'
     | '/admin/campaigns'
     | '/admin/engagers'
     | '/admin/games'
@@ -353,6 +365,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminActivitiesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/ads': {
+      id: '/admin/ads'
+      path: '/ads'
+      fullPath: '/admin/ads'
+      preLoaderRoute: typeof AdminAdsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/campaigns': {
       id: '/admin/campaigns'
       path: '/campaigns'
@@ -442,6 +461,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminActivitiesRoute: typeof AdminActivitiesRoute
+  AdminAdsRoute: typeof AdminAdsRoute
   AdminCampaignsRoute: typeof AdminCampaignsRoute
   AdminEngagersRoute: typeof AdminEngagersRoute
   AdminGamesRoute: typeof AdminGamesRoute
@@ -458,6 +478,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminActivitiesRoute: AdminActivitiesRoute,
+  AdminAdsRoute: AdminAdsRoute,
   AdminCampaignsRoute: AdminCampaignsRoute,
   AdminEngagersRoute: AdminEngagersRoute,
   AdminGamesRoute: AdminGamesRoute,
@@ -487,13 +508,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
