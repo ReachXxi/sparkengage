@@ -5,6 +5,7 @@ import { SpinWheel } from "@/components/stage/SpinWheel";
 import { CampaignCard, TimeLeft } from "@/components/stage/CampaignCard";
 import { Tutorial } from "@/components/stage/Tutorial";
 import { campaigns } from "@/data/stage";
+import { ads } from "@/data/console";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -84,6 +85,8 @@ function Home() {
           </div>
         </section>
 
+        <AdsSection />
+
         <section className="space-y-4">
           <div>
             <h2 className="text-2xl">Picked for you</h2>
@@ -97,5 +100,83 @@ function Home() {
         </section>
       </div>
     </StageShell>
+  );
+}
+
+function AdsSection() {
+  const running = ads.filter((a) => a.status === "active" || a.status === "scheduled");
+  const featured = running.find((a) => a.featured) ?? running[0];
+  if (!featured) return null;
+  const rest = running.filter((a) => a.id !== featured.id).slice(0, 2);
+
+  return (
+    <section className="space-y-4" aria-labelledby="ads-heading">
+      <div className="flex items-end justify-between">
+        <div>
+          <h2 id="ads-heading" className="text-2xl">
+            Sponsored
+          </h2>
+          <p className="text-sm text-muted-foreground">Drops and offers from partners inside the SPARKFAN network.</p>
+        </div>
+      </div>
+
+      <article className="overflow-hidden rounded-3xl bg-card shadow-card md:grid md:grid-cols-2">
+        <img
+          src={featured.banner}
+          alt={`${featured.advertiser} — ${featured.headline}`}
+          loading="lazy"
+          className="h-56 w-full object-cover object-top md:h-full"
+        />
+        <div className="space-y-3 p-6 sm:p-8">
+          <p className="text-xs font-bold uppercase tracking-widest text-highlight">
+            Sponsored · {featured.advertiser}
+          </p>
+          <h3 className="text-2xl">{featured.headline}</h3>
+          <p className="text-sm text-muted-foreground">{featured.body}</p>
+          <div className="flex flex-wrap gap-2 pt-1">
+            {featured.targeting.slice(0, 4).map((t) => (
+              <span key={t} className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                {t}
+              </span>
+            ))}
+          </div>
+          <Button asChild size="lg" className="mt-2 rounded-full bg-sun font-bold text-accent-foreground">
+            {featured.ctaUrl.startsWith("http") ? (
+              <a href={featured.ctaUrl} target="_blank" rel="noreferrer">
+                {featured.cta}
+              </a>
+            ) : (
+              <Link to={featured.ctaUrl}>{featured.cta}</Link>
+            )}
+          </Button>
+        </div>
+      </article>
+
+      {rest.length > 0 && (
+        <div className="grid gap-5 sm:grid-cols-2">
+          {rest.map((ad) => (
+            <article key={ad.id} className="overflow-hidden rounded-3xl bg-card shadow-card">
+              <img src={ad.banner} alt={`${ad.advertiser} banner`} loading="lazy" className="h-36 w-full object-cover" />
+              <div className="space-y-2 p-5">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Sponsored · {ad.advertiser}
+                </p>
+                <h3 className="text-lg">{ad.headline}</h3>
+                <p className="line-clamp-2 text-sm text-muted-foreground">{ad.body}</p>
+                <Button asChild variant="outline" className="mt-1 rounded-full font-bold">
+                  {ad.ctaUrl.startsWith("http") ? (
+                    <a href={ad.ctaUrl} target="_blank" rel="noreferrer">
+                      {ad.cta}
+                    </a>
+                  ) : (
+                    <Link to={ad.ctaUrl}>{ad.cta}</Link>
+                  )}
+                </Button>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }

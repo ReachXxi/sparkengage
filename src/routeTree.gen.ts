@@ -18,11 +18,13 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminActivitiesRouteImport } from './routes/admin.activities'
+import { Route as AdminAdsRouteImport } from './routes/admin.ads'
 import { Route as AdminCampaignsRouteImport } from './routes/admin.campaigns'
 import { Route as AdminEngagersRouteImport } from './routes/admin.engagers'
 import { Route as AdminGamesRouteImport } from './routes/admin.games'
 import { Route as AdminLeaderboardRouteImport } from './routes/admin.leaderboard'
 import { Route as AdminLogsRouteImport } from './routes/admin.logs'
+import { Route as AdminNewslettersRouteImport } from './routes/admin.newsletters'
 import { Route as AdminResponsesRouteImport } from './routes/admin.responses'
 import { Route as AdminRewardsRouteImport } from './routes/admin.rewards'
 import { Route as AdminSocialRouteImport } from './routes/admin.social'
@@ -76,6 +78,11 @@ const AdminActivitiesRoute = AdminActivitiesRouteImport.update({
   path: '/activities',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdsRoute = AdminAdsRouteImport.update({
+  id: '/ads',
+  path: '/ads',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCampaignsRoute = AdminCampaignsRouteImport.update({
   id: '/campaigns',
   path: '/campaigns',
@@ -99,6 +106,11 @@ const AdminLeaderboardRoute = AdminLeaderboardRouteImport.update({
 const AdminLogsRoute = AdminLogsRouteImport.update({
   id: '/logs',
   path: '/logs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNewslettersRoute = AdminNewslettersRouteImport.update({
+  id: '/newsletters',
+  path: '/newsletters',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminResponsesRoute = AdminResponsesRouteImport.update({
@@ -146,11 +158,13 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
   '/admin/activities': typeof AdminActivitiesRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/engagers': typeof AdminEngagersRoute
   '/admin/games': typeof AdminGamesRoute
   '/admin/leaderboard': typeof AdminLeaderboardRoute
   '/admin/logs': typeof AdminLogsRoute
+  '/admin/newsletters': typeof AdminNewslettersRoute
   '/admin/responses': typeof AdminResponsesRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/social': typeof AdminSocialRoute
@@ -168,11 +182,13 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
   '/admin/activities': typeof AdminActivitiesRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/engagers': typeof AdminEngagersRoute
   '/admin/games': typeof AdminGamesRoute
   '/admin/leaderboard': typeof AdminLeaderboardRoute
   '/admin/logs': typeof AdminLogsRoute
+  '/admin/newsletters': typeof AdminNewslettersRoute
   '/admin/responses': typeof AdminResponsesRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/social': typeof AdminSocialRoute
@@ -192,11 +208,13 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/wallet': typeof WalletRoute
   '/admin/activities': typeof AdminActivitiesRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/campaigns': typeof AdminCampaignsRoute
   '/admin/engagers': typeof AdminEngagersRoute
   '/admin/games': typeof AdminGamesRoute
   '/admin/leaderboard': typeof AdminLeaderboardRoute
   '/admin/logs': typeof AdminLogsRoute
+  '/admin/newsletters': typeof AdminNewslettersRoute
   '/admin/responses': typeof AdminResponsesRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/social': typeof AdminSocialRoute
@@ -217,11 +235,13 @@ export interface FileRouteTypes {
     | '/profile'
     | '/wallet'
     | '/admin/activities'
+    | '/admin/ads'
     | '/admin/campaigns'
     | '/admin/engagers'
     | '/admin/games'
     | '/admin/leaderboard'
     | '/admin/logs'
+    | '/admin/newsletters'
     | '/admin/responses'
     | '/admin/rewards'
     | '/admin/social'
@@ -239,11 +259,13 @@ export interface FileRouteTypes {
     | '/profile'
     | '/wallet'
     | '/admin/activities'
+    | '/admin/ads'
     | '/admin/campaigns'
     | '/admin/engagers'
     | '/admin/games'
     | '/admin/leaderboard'
     | '/admin/logs'
+    | '/admin/newsletters'
     | '/admin/responses'
     | '/admin/rewards'
     | '/admin/social'
@@ -262,11 +284,13 @@ export interface FileRouteTypes {
     | '/profile'
     | '/wallet'
     | '/admin/activities'
+    | '/admin/ads'
     | '/admin/campaigns'
     | '/admin/engagers'
     | '/admin/games'
     | '/admin/leaderboard'
     | '/admin/logs'
+    | '/admin/newsletters'
     | '/admin/responses'
     | '/admin/rewards'
     | '/admin/social'
@@ -353,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminActivitiesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/ads': {
+      id: '/admin/ads'
+      path: '/ads'
+      fullPath: '/admin/ads'
+      preLoaderRoute: typeof AdminAdsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/campaigns': {
       id: '/admin/campaigns'
       path: '/campaigns'
@@ -386,6 +417,13 @@ declare module '@tanstack/react-router' {
       path: '/logs'
       fullPath: '/admin/logs'
       preLoaderRoute: typeof AdminLogsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/newsletters': {
+      id: '/admin/newsletters'
+      path: '/newsletters'
+      fullPath: '/admin/newsletters'
+      preLoaderRoute: typeof AdminNewslettersRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/responses': {
@@ -442,11 +480,13 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminActivitiesRoute: typeof AdminActivitiesRoute
+  AdminAdsRoute: typeof AdminAdsRoute
   AdminCampaignsRoute: typeof AdminCampaignsRoute
   AdminEngagersRoute: typeof AdminEngagersRoute
   AdminGamesRoute: typeof AdminGamesRoute
   AdminLeaderboardRoute: typeof AdminLeaderboardRoute
   AdminLogsRoute: typeof AdminLogsRoute
+  AdminNewslettersRoute: typeof AdminNewslettersRoute
   AdminResponsesRoute: typeof AdminResponsesRoute
   AdminRewardsRoute: typeof AdminRewardsRoute
   AdminSocialRoute: typeof AdminSocialRoute
@@ -458,11 +498,13 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminActivitiesRoute: AdminActivitiesRoute,
+  AdminAdsRoute: AdminAdsRoute,
   AdminCampaignsRoute: AdminCampaignsRoute,
   AdminEngagersRoute: AdminEngagersRoute,
   AdminGamesRoute: AdminGamesRoute,
   AdminLeaderboardRoute: AdminLeaderboardRoute,
   AdminLogsRoute: AdminLogsRoute,
+  AdminNewslettersRoute: AdminNewslettersRoute,
   AdminResponsesRoute: AdminResponsesRoute,
   AdminRewardsRoute: AdminRewardsRoute,
   AdminSocialRoute: AdminSocialRoute,
@@ -487,3 +529,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

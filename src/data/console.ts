@@ -12,6 +12,7 @@ import celebTiwa from "@/assets/celeb-tiwasavage.jpg.asset.json";
 import celebRema from "@/assets/celeb-rema.jpg.asset.json";
 import celebSherif from "@/assets/celeb-blacksherif.jpg.asset.json";
 import celebAya from "@/assets/celeb-ayanakamura.jpg.asset.json";
+import oriadeAdBanner from "@/assets/oriade-tracklist.png.asset.json";
 
 /* ------------------------------------------------------------------ */
 /* Deterministic RNG                                                   */
@@ -169,6 +170,8 @@ export type SocialTask = {
   platform: "Instagram" | "X" | "TikTok" | "Spotify" | "Apple Music" | "Goodreads";
   label: string;
   hashtag: string;
+  /** where the fan is sent to complete the task */
+  url?: string;
   points: number;
   submissions: number;
   approved: number;
@@ -1060,4 +1063,218 @@ export const moduleOptions = [
   "Word Search",
   "Social Tasks",
   "Survey",
+];
+
+/* ------------------------------------------------------------------ */
+/* Ads & newsletters                                                   */
+/* ------------------------------------------------------------------ */
+
+export type AdPlacement = "Landing hero" | "Landing feed" | "Campaign page" | "Wallet" | "Leaderboard";
+
+export type Ad = {
+  id: string;
+  tenantId: string;
+  campaignId: string;
+  name: string;
+  advertiser: string;
+  headline: string;
+  body: string;
+  cta: string;
+  ctaUrl: string;
+  banner: string;
+  placement: AdPlacement;
+  startsAt: string;
+  endsAt: string;
+  /** days the banner runs for */
+  duration: number;
+  targeting: string[];
+  budget: number;
+  impressions: number;
+  clicks: number;
+  status: "active" | "scheduled" | "paused" | "ended";
+  featured: boolean;
+};
+
+export const adPlacements: AdPlacement[] = [
+  "Landing hero",
+  "Landing feed",
+  "Campaign page",
+  "Wallet",
+  "Leaderboard",
+];
+
+export const ads: Ad[] = [
+  {
+    id: "ad-oriade",
+    tenantId: "t-empire",
+    campaignId: "c-bnxn",
+    name: "ORIADÉ — album takeover",
+    advertiser: "Davido · ORIADÉ",
+    headline: "ORIADÉ is out now — Davido's sixth studio album",
+    body:
+      "13 tracks marking 15 years of OBO. Features Black Sherif, Mayorkun, Aya Nakamura, Leon Thomas, Llona, Fola, JAZZWRLD and GL_Ceejay. Stream it, play the games and earn points on SPARKFAN.",
+    cta: "Stream ORIADÉ",
+    ctaUrl: "/campaign/oriade-album",
+    banner: oriadeAdBanner.url,
+    placement: "Landing feed",
+    startsAt: "2026-08-01",
+    endsAt: "2026-08-31",
+    duration: 30,
+    targeting: ["Nigeria", "UK diaspora", "US diaspora", "Spotify listeners", "18–34"],
+    budget: 4500,
+    impressions: 482100,
+    clicks: 41870,
+    status: "active",
+    featured: true,
+  },
+  {
+    id: "ad-empire-merch",
+    tenantId: "t-empire",
+    campaignId: "c-bnxn",
+    name: "EMPIRE capsule merch",
+    advertiser: "EMPIRE Store",
+    headline: "The tour capsule just dropped",
+    body: "Limited crewnecks and caps. Fans with 1,200+ points unlock 30% off at checkout.",
+    cta: "Shop the capsule",
+    ctaUrl: "/wallet",
+    banner: "https://picsum.photos/seed/ad-empire-merch/1200/500",
+    placement: "Landing feed",
+    startsAt: "2026-08-03",
+    endsAt: "2026-08-24",
+    duration: 21,
+    targeting: ["Superfans", "Nigeria", "18–34"],
+    budget: 1800,
+    impressions: 210400,
+    clicks: 12310,
+    status: "active",
+    featured: false,
+  },
+  {
+    id: "ad-filmone",
+    tenantId: "t-filmone",
+    campaignId: "c-call",
+    name: "The Call of My Life — cinema week",
+    advertiser: "FilmOne Entertainment",
+    headline: "In cinemas nationwide this weekend",
+    body: "Book a ticket, scan your stub in the app and claim 250 bonus points plus the BTS reel.",
+    cta: "Find a cinema",
+    ctaUrl: "/campaign/call-of-my-life",
+    banner: "https://picsum.photos/seed/ad-filmone-cinema/1200/500",
+    placement: "Campaign page",
+    startsAt: "2026-08-06",
+    endsAt: "2026-08-20",
+    duration: 14,
+    targeting: ["Cinema-goers", "Nigeria", "Ghana"],
+    budget: 3200,
+    impressions: 168900,
+    clicks: 9840,
+    status: "scheduled",
+    featured: false,
+  },
+  {
+    id: "ad-holt",
+    tenantId: "t-henryholt",
+    campaignId: "c-cbb",
+    name: "Orïsha anniversary edition",
+    advertiser: "Henry Holt & Co.",
+    headline: "Ten years of Children of Blood and Bone",
+    body: "Anniversary edition with a new author foreword and illustrated map. Book clubs get a free kit.",
+    cta: "Pre-order now",
+    ctaUrl: "/campaign/children-of-blood-and-bone",
+    banner: "https://picsum.photos/seed/ad-holt-anniversary/1200/500",
+    placement: "Landing feed",
+    startsAt: "2026-07-20",
+    endsAt: "2026-08-04",
+    duration: 15,
+    targeting: ["Book clubs", "UK diaspora", "US diaspora"],
+    budget: 1400,
+    impressions: 98700,
+    clicks: 5120,
+    status: "ended",
+    featured: false,
+  },
+];
+
+export type Newsletter = {
+  id: string;
+  tenantId: string;
+  campaignId: string;
+  subject: string;
+  preheader: string;
+  body: string;
+  audience: string;
+  scheduledAt: string;
+  status: "draft" | "scheduled" | "sent";
+  recipients: number;
+  opens: number;
+  clicks: number;
+};
+
+export const newsletterAudiences = [
+  "All fans",
+  "Superfans",
+  "Regulars",
+  "New fans",
+  "Lapsed fans",
+  "Top 100 leaderboard",
+];
+
+export const newsletters: Newsletter[] = [
+  {
+    id: "nl1",
+    tenantId: "t-empire",
+    campaignId: "c-bnxn",
+    subject: "ORIADÉ is here — 13 tracks, 15 years of OBO",
+    preheader: "Stream it, play the quiz and climb the board this weekend.",
+    body:
+      "Fam, ORIADÉ just landed. Stream all 13 tracks, take the 30-question album quiz and drag your friends in — top 100 fans get the numbered digital cover art.",
+    audience: "All fans",
+    scheduledAt: "2026-08-01T09:00:00Z",
+    status: "sent",
+    recipients: 48210,
+    opens: 31480,
+    clicks: 12940,
+  },
+  {
+    id: "nl2",
+    tenantId: "t-empire",
+    campaignId: "c-bnxn",
+    subject: "Listening party starts in 2 hours",
+    preheader: "Double points for everyone inside the room.",
+    body: "The listening party goes live at 8pm WAT. Every action inside the room pays double points tonight only.",
+    audience: "Superfans",
+    scheduledAt: "2026-08-08T17:00:00Z",
+    status: "scheduled",
+    recipients: 9120,
+    opens: 0,
+    clicks: 0,
+  },
+  {
+    id: "nl3",
+    tenantId: "t-filmone",
+    campaignId: "c-call",
+    subject: "Premiere week: your ticket earns points",
+    preheader: "Scan your stub for 250 bonus points.",
+    body: "The Call of My Life is in cinemas. Scan your ticket stub in the app for 250 points and unlock the BTS reel.",
+    audience: "Cinema-goers",
+    scheduledAt: "2026-08-07T10:00:00Z",
+    status: "draft",
+    recipients: 0,
+    opens: 0,
+    clicks: 0,
+  },
+  {
+    id: "nl4",
+    tenantId: "t-henryholt",
+    campaignId: "c-cbb",
+    subject: "Chapter 1 of the next Orïsha book",
+    preheader: "Exclusive preview for book club members.",
+    body: "Book clubs get the first chapter of the next Orïsha novel today. Reply with your read-along date and we'll feature it.",
+    audience: "Book clubs",
+    scheduledAt: "2026-08-05T12:00:00Z",
+    status: "sent",
+    recipients: 12400,
+    opens: 8410,
+    clicks: 3120,
+  },
 ];

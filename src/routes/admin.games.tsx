@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Bar as RBar,
   BarChart,
@@ -13,7 +13,18 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Gamepad2, Target, Timer, Trophy } from "lucide-react";
+import { Gamepad2, Pencil, Plus, Target, Timer, Trash2, Trophy, Upload } from "lucide-react";
+import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import type { Celebrity, QuizQuestion } from "@/data/console";
 import { Button } from "@/components/ui/button";
 import { useAdmin } from "@/lib/admin-store";
 import {
@@ -47,8 +58,11 @@ export const Route = createFileRoute("/admin/games")({
 });
 
 function Games() {
-  const { quizResults, gameResults, quizQuestions, celebrities, campaigns } = useAdmin();
+  const { quizResults, gameResults, quizQuestions, celebrities, campaigns, actions } = useAdmin();
   const campaignIds = campaigns.map((c) => c.id);
+  const [editQ, setEditQ] = useState<QuizQuestion | null>(null);
+  const [editCeleb, setEditCeleb] = useState<Celebrity | null>(null);
+  const [qCampaign, setQCampaign] = useState(campaigns[0]?.id ?? "");
 
   const questions = quizQuestions.filter((q) => campaignIds.includes(q.campaignId));
   const celebs = celebrities.filter((c) => campaignIds.includes(c.campaignId));
@@ -137,7 +151,29 @@ function Games() {
         </Panel>
       </div>
 
-      <Panel title="Guess the Celebrity — solve rates" hint="Real photos used in the fan app">
+      <Panel
+        title="Guess the Celebrity — rounds & images"
+        hint="Edit names, hints and swap the photo used in the fan app"
+        actions={
+          <Button
+            variant="outline"
+            className="rounded-full font-bold"
+            onClick={() =>
+              setEditCeleb({
+                id: `cel-${Math.random().toString(36).slice(2, 8)}`,
+                name: "",
+                hint: "",
+                image: "https://picsum.photos/seed/new-celeb/480/480",
+                campaignId: qCampaign || campaigns[0]?.id || "",
+                guesses: 0,
+                solved: 0,
+              })
+            }
+          >
+            <Plus className="size-4" /> Add round
+          </Button>
+        }
+      >
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {celebs.map((c) => {
             const rate = c.guesses ? (c.solved / c.guesses) * 100 : 0;
@@ -153,11 +189,96 @@ function Games() {
                   <p className="mt-1 text-[11px] font-semibold text-ink-2">
                     {Math.round(rate)}% solved · {nf(c.guesses)} guesses
                   </p>
+                  <div className="mt-2 flex gap-2">
+                    <Button size="sm" variant="outline" className="rounded-full" onClick={() => setEditCeleb(c)}>
+                      <Pencil className="size-3.5" /> Edit
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="rounded-full text-bad hover:bg-bad/10"
+                      onClick={() => {
+                        actions.deleteCelebrity(c.id);
+                        actions.log("Removed celebrity round", c.name, "critical");
+                        toast.success("Round removed");
+                      }}
+                    >
+                      <Trash2 className="size-3.5" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
+      </Panel>
+
+      <Panel
+        title="Quiz questions"
+        hint="Add, rewrite or delete any question — changes hit the fan app instantly"
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <select
+              value={qCampaign}
+              onChange={(e) => setQCampaign(e.target.value)}
+              className="h-10 rounded-xl border border-input bg-background px-3 text-sm"
+            >
+              {campaigns.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <Button
+              className="rounded-full bg-brand-gradient font-bold text-white"
+              onClick={() =>
+                setEditQ({
+                  id: `q-${Math.random().toString(36).slice(2, 8)}`,
+                  campaignId: qCampaign || campaigns[0]?.id || "",
+                  q: "",
+                  a: "",
+                  accuracy: 0,
+                })
+              }
+            >
+              <Plus className="size-4" /> Add question
+            </Button>
+          </div>
+        }
+      >
+        <DataTable head={["Question", "Answer", "Accuracy", ""]}>
+          {questions
+            .filter((q) => (qCampaign ? q.campaignId === qCampaign : true))
+            .map((q) => (
+              <tr key={q.id}>
+                <Td className="font-semibold text-ink">{q.q}</Td>
+                <Td>{q.a}</Td>
+                <Td className="w-28">
+                  <Bar value={q.accuracy} tone={q.accuracy < 40 ? "gold" : "brand"} />
+                  <span className="text-[11px] text-ink-3">{q.accuracy}%</span>
+                </Td>
+                <Td>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={() => setEditQ(q)}>
+                      <Pencil className="size-3.5" /> Edit
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-bad hover:bg-bad/10"
+                      onClick={() => {
+                        actions.deleteQuizQuestion(q.id);
+                        actions.log("Deleted quiz question", q.q, "critical");
+                        toast.success("Question deleted");
+                      }}
+                    >
+                      <Trash2 className="size-3.5" />
+                    </Button>
+                  </div>
+                </Td>
+              </tr>
+            ))}
+        </DataTable>
       </Panel>
 
       <div className="grid gap-5 xl:grid-cols-2">
@@ -213,6 +334,180 @@ function Games() {
           ))}
         </DataTable>
       </Panel>
+
+      {editQ && (
+        <QuestionEditor
+          key={editQ.id}
+          question={editQ}
+          campaigns={campaigns.map((c) => ({ id: c.id, name: c.name }))}
+          onClose={() => setEditQ(null)}
+          onSave={(q) => {
+            if (!q.q.trim() || !q.a.trim()) {
+              toast.error("A question needs both a prompt and an answer.");
+              return;
+            }
+            actions.saveQuizQuestion(q);
+            actions.log("Saved quiz question", q.q);
+            setEditQ(null);
+            toast.success("Question saved");
+          }}
+        />
+      )}
+
+      {editCeleb && (
+        <CelebEditor
+          key={editCeleb.id}
+          celeb={editCeleb}
+          campaigns={campaigns.map((c) => ({ id: c.id, name: c.name }))}
+          onClose={() => setEditCeleb(null)}
+          onSave={(c) => {
+            if (!c.name.trim()) {
+              toast.error("Name the celebrity first.");
+              return;
+            }
+            actions.saveCelebrity(c);
+            actions.log("Saved celebrity round", c.name);
+            setEditCeleb(null);
+            toast.success("Round saved");
+          }}
+        />
+      )}
     </>
+  );
+}
+
+function QuestionEditor({
+  question,
+  campaigns,
+  onClose,
+  onSave,
+}: {
+  question: QuizQuestion;
+  campaigns: { id: string; name: string }[];
+  onClose: () => void;
+  onSave: (q: QuizQuestion) => void;
+}) {
+  const [draft, setDraft] = useState<QuizQuestion>(question);
+  const set = <K extends keyof QuizQuestion>(k: K, v: QuizQuestion[K]) => setDraft((d) => ({ ...d, [k]: v }));
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-xl rounded-3xl">
+        <DialogHeader>
+          <DialogTitle>{question.q ? "Edit question" : "New question"}</DialogTitle>
+          <DialogDescription>Question text, correct answer and which campaign quiz it belongs to.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          <label className="block text-sm font-semibold text-ink">
+            Question
+            <Input value={draft.q} onChange={(e) => set("q", e.target.value)} className="mt-1 rounded-xl" />
+          </label>
+          <label className="block text-sm font-semibold text-ink">
+            Correct answer
+            <Input value={draft.a} onChange={(e) => set("a", e.target.value)} className="mt-1 rounded-xl" />
+          </label>
+          <label className="block text-sm font-semibold text-ink">
+            Campaign
+            <select
+              value={draft.campaignId}
+              onChange={(e) => set("campaignId", e.target.value)}
+              className="mt-1 h-10 w-full rounded-xl border border-input bg-background px-3 text-sm"
+            >
+              {campaigns.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button onClick={() => onSave(draft)}>Save question</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function CelebEditor({
+  celeb,
+  campaigns,
+  onClose,
+  onSave,
+}: {
+  celeb: Celebrity;
+  campaigns: { id: string; name: string }[];
+  onClose: () => void;
+  onSave: (c: Celebrity) => void;
+}) {
+  const [draft, setDraft] = useState<Celebrity>(celeb);
+  const set = <K extends keyof Celebrity>(k: K, v: Celebrity[K]) => setDraft((d) => ({ ...d, [k]: v }));
+
+  const onFile = (file: File | undefined) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      set("image", String(reader.result));
+      toast.success("Photo uploaded");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-xl rounded-3xl">
+        <DialogHeader>
+          <DialogTitle>{celeb.name ? "Edit round" : "New round"}</DialogTitle>
+          <DialogDescription>Swap the photo, rewrite the hint and pick the campaign it plays in.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <img src={draft.image} alt="Round preview" className="size-20 rounded-xl object-cover object-top" />
+            <div className="space-y-2">
+              <label className="inline-flex cursor-pointer items-center rounded-full border border-border px-4 py-2 text-xs font-bold text-ink-2 hover:bg-brand/5">
+                <Upload className="mr-1 inline size-3.5" /> Upload photo
+                <input type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
+              </label>
+              <Input
+                value={draft.image.startsWith("data:") ? "" : draft.image}
+                onChange={(e) => set("image", e.target.value)}
+                placeholder="…or paste an image URL"
+                className="h-9 w-64 rounded-xl text-xs"
+              />
+            </div>
+          </div>
+          <label className="block text-sm font-semibold text-ink">
+            Name
+            <Input value={draft.name} onChange={(e) => set("name", e.target.value)} className="mt-1 rounded-xl" />
+          </label>
+          <label className="block text-sm font-semibold text-ink">
+            Hint
+            <Input value={draft.hint} onChange={(e) => set("hint", e.target.value)} className="mt-1 rounded-xl" />
+          </label>
+          <label className="block text-sm font-semibold text-ink">
+            Campaign
+            <select
+              value={draft.campaignId}
+              onChange={(e) => set("campaignId", e.target.value)}
+              className="mt-1 h-10 w-full rounded-xl border border-input bg-background px-3 text-sm"
+            >
+              {campaigns.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button onClick={() => onSave(draft)}>Save round</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

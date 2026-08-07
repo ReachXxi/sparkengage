@@ -139,6 +139,43 @@ function Dashboard() {
           </p>
         </header>
 
+        <section className="rounded-3xl border border-border bg-card p-6 shadow-card sm:p-8">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-highlight">Creator console</p>
+              <h2 className="mt-1 text-2xl">Manage everything in the admin console</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Campaigns, games and quiz questions, activities, social task links, rewards, surveys, leaderboards,
+                ads and newsletters — fully customisable per campaign.
+              </p>
+            </div>
+            <Button asChild size="lg" className="rounded-full bg-sun font-bold text-accent-foreground">
+              <Link to="/admin">Open the admin console</Link>
+            </Button>
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { to: "/admin/campaigns", label: "Campaigns", hint: "Create, edit, publish" },
+              { to: "/admin/games", label: "Games & Quiz", hint: "Questions & images" },
+              { to: "/admin/activities", label: "Activities", hint: "Types, points, targets" },
+              { to: "/admin/social", label: "Social tasks", hint: "Links & verification" },
+              { to: "/admin/rewards", label: "Rewards", hint: "Catalogue & redemptions" },
+              { to: "/admin/surveys", label: "Surveys", hint: "Image, text, number" },
+              { to: "/admin/ads", label: "Ads", hint: "Banners, duration, targeting" },
+              { to: "/admin/newsletters", label: "Newsletters", hint: "Write & schedule" },
+            ].map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="rounded-2xl border border-border bg-background p-4 transition hover:border-highlight"
+              >
+                <p className="text-sm font-bold">{item.label}</p>
+                <p className="text-xs text-muted-foreground">{item.hint}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
         <section className="rounded-3xl bg-stage p-6 text-primary-foreground shadow-pop sm:p-8">
           <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-accent">
             <Sparkles className="size-4" /> Campaign assistant
