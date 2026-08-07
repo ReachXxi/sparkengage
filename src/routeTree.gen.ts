@@ -24,6 +24,7 @@ import { Route as AdminEngagersRouteImport } from './routes/admin.engagers'
 import { Route as AdminGamesRouteImport } from './routes/admin.games'
 import { Route as AdminLeaderboardRouteImport } from './routes/admin.leaderboard'
 import { Route as AdminLogsRouteImport } from './routes/admin.logs'
+import { Route as AdminNewslettersRouteImport } from './routes/admin.newsletters'
 import { Route as AdminResponsesRouteImport } from './routes/admin.responses'
 import { Route as AdminRewardsRouteImport } from './routes/admin.rewards'
 import { Route as AdminSocialRouteImport } from './routes/admin.social'
@@ -107,6 +108,11 @@ const AdminLogsRoute = AdminLogsRouteImport.update({
   path: '/logs',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminNewslettersRoute = AdminNewslettersRouteImport.update({
+  id: '/newsletters',
+  path: '/newsletters',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminResponsesRoute = AdminResponsesRouteImport.update({
   id: '/responses',
   path: '/responses',
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/admin/games': typeof AdminGamesRoute
   '/admin/leaderboard': typeof AdminLeaderboardRoute
   '/admin/logs': typeof AdminLogsRoute
+  '/admin/newsletters': typeof AdminNewslettersRoute
   '/admin/responses': typeof AdminResponsesRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/social': typeof AdminSocialRoute
@@ -181,6 +188,7 @@ export interface FileRoutesByTo {
   '/admin/games': typeof AdminGamesRoute
   '/admin/leaderboard': typeof AdminLeaderboardRoute
   '/admin/logs': typeof AdminLogsRoute
+  '/admin/newsletters': typeof AdminNewslettersRoute
   '/admin/responses': typeof AdminResponsesRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/social': typeof AdminSocialRoute
@@ -206,6 +214,7 @@ export interface FileRoutesById {
   '/admin/games': typeof AdminGamesRoute
   '/admin/leaderboard': typeof AdminLeaderboardRoute
   '/admin/logs': typeof AdminLogsRoute
+  '/admin/newsletters': typeof AdminNewslettersRoute
   '/admin/responses': typeof AdminResponsesRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/social': typeof AdminSocialRoute
@@ -232,6 +241,7 @@ export interface FileRouteTypes {
     | '/admin/games'
     | '/admin/leaderboard'
     | '/admin/logs'
+    | '/admin/newsletters'
     | '/admin/responses'
     | '/admin/rewards'
     | '/admin/social'
@@ -255,6 +265,7 @@ export interface FileRouteTypes {
     | '/admin/games'
     | '/admin/leaderboard'
     | '/admin/logs'
+    | '/admin/newsletters'
     | '/admin/responses'
     | '/admin/rewards'
     | '/admin/social'
@@ -279,6 +290,7 @@ export interface FileRouteTypes {
     | '/admin/games'
     | '/admin/leaderboard'
     | '/admin/logs'
+    | '/admin/newsletters'
     | '/admin/responses'
     | '/admin/rewards'
     | '/admin/social'
@@ -407,6 +419,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLogsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/newsletters': {
+      id: '/admin/newsletters'
+      path: '/newsletters'
+      fullPath: '/admin/newsletters'
+      preLoaderRoute: typeof AdminNewslettersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/responses': {
       id: '/admin/responses'
       path: '/responses'
@@ -467,6 +486,7 @@ interface AdminRouteChildren {
   AdminGamesRoute: typeof AdminGamesRoute
   AdminLeaderboardRoute: typeof AdminLeaderboardRoute
   AdminLogsRoute: typeof AdminLogsRoute
+  AdminNewslettersRoute: typeof AdminNewslettersRoute
   AdminResponsesRoute: typeof AdminResponsesRoute
   AdminRewardsRoute: typeof AdminRewardsRoute
   AdminSocialRoute: typeof AdminSocialRoute
@@ -484,6 +504,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminGamesRoute: AdminGamesRoute,
   AdminLeaderboardRoute: AdminLeaderboardRoute,
   AdminLogsRoute: AdminLogsRoute,
+  AdminNewslettersRoute: AdminNewslettersRoute,
   AdminResponsesRoute: AdminResponsesRoute,
   AdminRewardsRoute: AdminRewardsRoute,
   AdminSocialRoute: AdminSocialRoute,
