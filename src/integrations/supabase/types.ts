@@ -14,7 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      campaign_builder_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          session_key: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          session_key: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          session_key?: string
+        }
+        Relationships: []
+      }
+      campaign_chat_messages: {
+        Row: {
+          body: string
+          campaign_id: string
+          created_at: string
+          display_name: string
+          id: string
+        }
+        Insert: {
+          body: string
+          campaign_id: string
+          created_at?: string
+          display_name: string
+          id?: string
+        }
+        Update: {
+          body?: string
+          campaign_id?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      campaign_overrides: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          payload: Json
+          published: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          payload?: Json
+          published?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          payload?: Json
+          published?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
