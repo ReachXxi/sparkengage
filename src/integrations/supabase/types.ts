@@ -89,6 +89,45 @@ export type Database = {
         }
         Relationships: []
       }
+      game_matches: {
+        Row: {
+          campaign_id: string
+          challenger_name: string
+          created_at: string
+          entry_fee: number
+          game: string
+          id: string
+          opponent_name: string | null
+          status: string
+          updated_at: string
+          winner_name: string | null
+        }
+        Insert: {
+          campaign_id: string
+          challenger_name: string
+          created_at?: string
+          entry_fee?: number
+          game: string
+          id?: string
+          opponent_name?: string | null
+          status?: string
+          updated_at?: string
+          winner_name?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          challenger_name?: string
+          created_at?: string
+          entry_fee?: number
+          game?: string
+          id?: string
+          opponent_name?: string | null
+          status?: string
+          updated_at?: string
+          winner_name?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
