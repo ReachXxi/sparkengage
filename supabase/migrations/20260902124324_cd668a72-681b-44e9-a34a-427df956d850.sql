@@ -1,0 +1,1 @@
+CREATE POLICY "Builder history is server-only" ON public.campaign_builder_messages FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
