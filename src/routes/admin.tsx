@@ -1,5 +1,5 @@
-import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, Outlet, useRouter, useRouterState } from "@tanstack/react-router";
+import { FormEvent, useEffect, useState } from "react";
 import {
   Activity,
   BarChart3,
@@ -25,6 +25,10 @@ import { AdminProvider, useAdmin } from "@/lib/admin-store";
 import logoAsset from "@/assets/sparkfan-logo.png.asset.json";
 import { cn } from "@/lib/utils";
 import { Pill } from "@/components/admin/ConsoleUI";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { unlockAdmin, getAdminAccess, lockAdmin } from "@/lib/admin-access.functions";
+import { useServerFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -67,10 +71,37 @@ const NAV = [
 
 function AdminLayout() {
   return (
-    <AdminProvider>
-      <ConsoleChrome />
-    </AdminProvider>
+    <AdminGate />
   );
+}
+
+function AdminGate() {
+  const router = useRouter();
+  const checkAccess = useServerFn(getAdminAccess);
+  const unlock = useServerFn(unlockAdmin);
+  const [unlocked, setUnlocked] = useState<boolean | null>(null);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+  useEffect(() => { void checkAccess().then((result) => setUnlocked(result.unlocked)).catch(() => setUnlocked(false)); }, [checkAccess]);
+  if (unlocked === null) return <div className="grid min-h-screen place-items-center bg-console text-sm text-ink-2">Checking creator access…</div>;
+  if (!unlocked) {
+    const submit = async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const result = await unlock({ data: { password } });
+      if (result.ok) { setUnlocked(true); setPassword(""); setError(false); } else setError(true);
+    };
+    return (
+      <div className="grid min-h-screen place-items-center bg-console px-4">
+        <form onSubmit={submit} className="w-full max-w-md space-y-5 rounded-3xl border border-border bg-card p-8 shadow-console-lg">
+          <div><p className="text-xs font-bold uppercase tracking-widest text-highlight">SPARKFAN creator console</p><h1 className="mt-2 text-3xl">Private workspace</h1><p className="mt-2 text-sm text-muted-foreground">Enter the admin password to manage campaigns, rewards, games and live fan experiences.</p></div>
+          <Input autoFocus type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Admin password" autoComplete="current-password" />
+          {error && <p role="alert" className="text-sm font-semibold text-destructive">That password is not correct.</p>}
+          <Button type="submit" className="w-full rounded-full bg-brand-gradient font-bold text-white">Unlock creator console</Button>
+        </form>
+      </div>
+    );
+  }
+  return <AdminProvider><ConsoleChrome onLock={async () => { await lockAdmin(); setUnlocked(false); await router.navigate({ to: "/" }); }} /></AdminProvider>;
 }
 
 function TenantSwitcher() {
@@ -125,7 +156,7 @@ function TenantSwitcher() {
   );
 }
 
-function ConsoleChrome() {
+function ConsoleChrome({ onLock }: { onLock: () => Promise<void> }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
 
@@ -197,6 +228,9 @@ function ConsoleChrome() {
           >
             <Activity className="size-4" /> Back to fan app
           </Link>
+          <Button variant="ghost" className="justify-start rounded-xl text-sm font-semibold text-ink-2" onClick={() => void onLock()}>
+            Lock creator console
+          </Button>
         </aside>
 
         {open && (

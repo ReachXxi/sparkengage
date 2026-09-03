@@ -43,6 +43,8 @@ import {
   type SurveyQuestion,
   type Tenant,
 } from "@/data/console";
+import { supabase } from "@/integrations/supabase/client";
+import { saveCampaignOverride } from "./admin-access.functions";
 
 const uid = (p: string) => `${p}-${Math.random().toString(36).slice(2, 8)}`;
 const nowISO = () => new Date().toISOString();
@@ -168,6 +170,25 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(t);
   }, []);
 
+  useEffect(() => {
+    const channel = supabase
+      .channel("campaign-overrides-admin")
+      .on("postgres_changes", { event: "*", schema: "public", table: "campaign_overrides" }, async () => {
+        const { data } = await supabase.from("campaign_overrides").select("campaign_id, payload").eq("published", true);
+        if (!data) return;
+        setState((current) => ({
+          ...current,
+          campaigns: current.campaigns.map((campaign) => {
+            const override = data.find((row) => row.campaign_id === campaign.id)?.payload;
+            if (!override || typeof override !== "object" || Array.isArray(override)) return campaign;
+            return { ...campaign, ...(override as Partial<Campaign>) };
+          }),
+        }));
+      })
+      .subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, []);
+
   const tenant = useMemo(
     () => tenants.find((t) => t.id === state.tenantId) ?? tenants[0]!,
     [state.tenantId],
@@ -202,6 +223,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             ? s.campaigns.map((x) => (x.id === c.id ? c : x))
             : [c, ...s.campaigns],
         }));
+        void saveCampaignOverride({ data: { campaignId: c.id, payload: c as unknown as Record<string, unknown> } });
       },
       deleteCampaign: (id) =>
         setState((s) => ({ ...s, campaigns: s.campaigns.filter((c) => c.id !== id) })),

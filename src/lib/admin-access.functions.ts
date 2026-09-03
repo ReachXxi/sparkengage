@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { getAdminSession, passwordMatches, requireAdminSession } from "./admin-auth.server";
+import type { Json } from "@/integrations/supabase/types";
 
 const PasswordInput = z.object({ password: z.string().min(1).max(200) });
 const CampaignOverrideInput = z.object({
@@ -37,7 +38,7 @@ export const saveCampaignOverride = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.from("campaign_overrides").upsert({
       campaign_id: data.campaignId,
-      payload: data.payload,
+      payload: JSON.parse(JSON.stringify(data.payload)) as Json,
       published: true,
       updated_by: "admin",
     });
