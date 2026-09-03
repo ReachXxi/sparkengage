@@ -62,6 +62,41 @@ export type Database = {
         }
         Relationships: []
       }
+      campaign_entries: {
+        Row: {
+          campaign_id: string
+          coins_paid: number
+          created_at: string
+          entry_type: string
+          id: string
+          wallet_id: string
+        }
+        Insert: {
+          campaign_id: string
+          coins_paid?: number
+          created_at?: string
+          entry_type: string
+          id?: string
+          wallet_id: string
+        }
+        Update: {
+          campaign_id?: string
+          coins_paid?: number
+          created_at?: string
+          entry_type?: string
+          id?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_entries_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "coin_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_overrides: {
         Row: {
           campaign_id: string
@@ -86,6 +121,68 @@ export type Database = {
           published?: boolean
           updated_at?: string
           updated_by?: string | null
+        }
+        Relationships: []
+      }
+      coin_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          type: string
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description: string
+          id?: string
+          type: string
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          type?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coin_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "coin_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coin_wallets: {
+        Row: {
+          balance: number
+          created_at: string
+          id: string
+          lifetime_earned: number
+          lifetime_purchased: number
+          updated_at: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          id?: string
+          lifetime_earned?: number
+          lifetime_purchased?: number
+          updated_at?: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          id?: string
+          lifetime_earned?: number
+          lifetime_purchased?: number
+          updated_at?: string
         }
         Relationships: []
       }
