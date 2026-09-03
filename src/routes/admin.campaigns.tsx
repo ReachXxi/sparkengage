@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Plus, Sparkles, Trash2, Wand2, Pencil, Upload, Play, Pause } from "lucide-react";
 import { toast } from "sonner";
@@ -19,6 +19,8 @@ import { draftCampaign, draftCampaignCopy, draftRewards, draftSurveyQuestions } 
 import { moduleOptions, targetingOptions, type Campaign, type CampaignStatus } from "@/data/console";
 import { DataTable, PageHeader, Panel, Pill, Td, nf } from "@/components/admin/ConsoleUI";
 import { cn } from "@/lib/utils";
+import { askCampaignBuilder, getBuilderHistory } from "@/lib/campaign-builder.functions";
+import { useServerFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/admin/campaigns")({
   head: () => ({
@@ -74,6 +76,12 @@ function Campaigns() {
     "Launching BNXN's deluxe edition next weekend — I want streams, a 30-question quiz and celebrity guessing.",
   );
   const [filter, setFilter] = useState<"all" | CampaignStatus>("all");
+  const askBuilder = useServerFn(askCampaignBuilder);
+  const loadBuilderHistory = useServerFn(getBuilderHistory);
+  const [builderMessage, setBuilderMessage] = useState("");
+  const [builderReply, setBuilderReply] = useState("");
+  const [builderBusy, setBuilderBusy] = useState(false);
+  useEffect(() => { void loadBuilderHistory().then((history) => setBuilderReply(history.at(-1)?.role === "assistant" ? history.at(-1)?.content ?? "" : "")); }, [loadBuilderHistory]);
 
   const visible = useMemo(
     () => (filter === "all" ? campaigns : campaigns.filter((c) => c.status === filter)),
@@ -118,6 +126,15 @@ function Campaigns() {
         hint="Describe the drop in one line — modules, points, targeting and copy get drafted for you."
         className="border-brand/20 bg-brand/[0.04]"
       >
+        <div className="mb-4 rounded-2xl border border-brand/15 bg-white p-4">
+          <p className="text-xs font-bold uppercase tracking-wider text-highlight">One ongoing conversation</p>
+          <p className="mt-1 text-sm text-ink-2">Ask for setup guidance, revisions, validation, entry rules, P2P games or rewards. The assistant only proposes changes; it never publishes without your review.</p>
+          {builderReply && <div className="mt-3 whitespace-pre-wrap rounded-xl bg-brand/5 p-3 text-sm text-ink-2">{builderReply}</div>}
+          <div className="mt-3 flex gap-2">
+            <Input value={builderMessage} onChange={(event) => setBuilderMessage(event.target.value)} placeholder="e.g. Make this a 50-Coin P2P quiz with 7 days and 100 winners" />
+            <Button disabled={builderBusy || !builderMessage.trim()} className="shrink-0 rounded-full bg-brand-gradient font-bold text-white" onClick={async () => { setBuilderBusy(true); try { const result = await askBuilder({ data: { message: builderMessage } }); setBuilderReply(result.reply); setBuilderMessage(""); toast.success("Assistant updated the campaign proposal."); } catch (error) { toast.error(error instanceof Error ? error.message : "Assistant unavailable"); } finally { setBuilderBusy(false); } }}>{builderBusy ? "Thinking…" : "Ask assistant"}</Button>
+          </div>
+        </div>
         <Textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}

@@ -116,7 +116,7 @@ function CampaignPage() {
 
         <Tabs defaultValue={campaign.album ? "album" : "stream"}>
           <TabsList className="w-full justify-start overflow-x-auto rounded-full bg-muted p-1">
-            {[...(campaign.album ? ["album"] : []), "stream", "quiz", "games", "social", "leaderboard"].map((t) => (
+            {[...(campaign.album ? ["album"] : []), "stream", "quiz", "games", "social", "leaderboard", "chat", "p2p"].map((t) => (
               <TabsTrigger key={t} value={t} className="rounded-full px-4 font-bold capitalize">
                 {t === "social" ? "Social Tasks" : t}
               </TabsTrigger>
