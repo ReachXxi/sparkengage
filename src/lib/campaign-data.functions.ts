@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { createServerFn } from "@tanstack/react-start";
 import type { Database } from "@/integrations/supabase/types";
+import type { Json } from "@/integrations/supabase/types";
 
 function publicClient() {
   const url = process.env["SUPABASE_URL"];
@@ -15,7 +16,7 @@ export const listPublishedCampaignOverrides = createServerFn({ method: "GET" }).
     .select("campaign_id, payload")
     .eq("published", true);
   if (error) throw new Error(error.message);
-  return data.map((row) => ({ campaignId: row.campaign_id, payload: row.payload as Record<string, unknown> }));
+    return data.map((row) => ({ campaignId: row.campaign_id, payload: row.payload as Json }));
 });
 
 export const getPublishedCampaignOverride = createServerFn({ method: "GET" })
@@ -28,5 +29,5 @@ export const getPublishedCampaignOverride = createServerFn({ method: "GET" })
       .eq("campaign_id", data.campaignId)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    return row ? { campaignId: row.campaign_id, payload: row.payload as Record<string, unknown> } : null;
+    return row ? { campaignId: row.campaign_id, payload: row.payload as Json } : null;
   });
