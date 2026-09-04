@@ -22,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { StageShell } from "@/components/stage/StageShell";
 import { campaigns } from "@/data/stage";
+import { AdminPasswordGate } from "@/components/admin/AdminPasswordGate";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -113,6 +114,10 @@ const socialSplit = [
 const pieColors = ["oklch(0.42 0.19 305)", "oklch(0.68 0.23 5)", "oklch(0.75 0.13 205)"];
 
 function Dashboard() {
+  return <AdminPasswordGate><DashboardContent /></AdminPasswordGate>;
+}
+
+function DashboardContent() {
   const [prompt, setPrompt] = useState(
     "I'm launching my new single 'Shayo' next Friday. I want streams and lyrics games.",
   );
