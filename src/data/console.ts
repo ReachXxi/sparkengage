@@ -71,6 +71,8 @@ export type Campaign = {
   rules: PointRule[];
   targeting: string[];
   prize: string;
+  entryMode?: "free" | "coins";
+  entryFee?: number;
   participants: number;
   actions: number;
   pointsIssued: number;

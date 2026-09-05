@@ -18,6 +18,8 @@ import { getPublishedCampaignOverride } from "@/lib/campaign-data.functions";
 import { listCampaignChat, sendCampaignChat } from "@/lib/campaign-chat.functions";
 import { createGameMatch, joinGameMatch, listGameMatches } from "@/lib/game-matches.functions";
 import { supabase } from "@/integrations/supabase/client";
+import { enterCampaignWithCoins } from "@/lib/wallet.functions";
+import { useServerFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/campaign/$id")({
   loader: async ({ params }) => {
@@ -68,6 +70,10 @@ function CampaignPage() {
   const countdown = useCountdown(campaign.endsAt);
   const [participants, setParticipants] = useState(campaign.participants);
   const [actions, setActions] = useState(campaign.actions);
+  const enterCampaign = useServerFn(enterCampaignWithCoins);
+  const [entryBusy, setEntryBusy] = useState(false);
+  const entryMode = campaign.entryMode ?? "free";
+  const entryFee = entryMode === "coins" ? Math.max(0, campaign.entryFee ?? 0) : 0;
 
   useEffect(() => {
     const channel = supabase
@@ -156,7 +162,21 @@ function CampaignPage() {
         <section className="rounded-3xl border border-border bg-card p-5 shadow-card sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div><p className="text-xs font-bold uppercase tracking-widest text-highlight">Campaign entry</p><h2 className="mt-1 text-2xl">Join the fan experience</h2><p className="mt-1 text-sm text-muted-foreground">Choose free access or redeem Spark Coins when this campaign uses a paid entry.</p></div>
-            <Button className="rounded-full font-bold" onClick={() => toast.success("You're in — your fan activity is now being tracked.")}>Join for free</Button>
+            <Button
+              className="rounded-full font-bold"
+              disabled={entryBusy}
+              onClick={async () => {
+                setEntryBusy(true);
+                try {
+                  await enterCampaign({ data: { campaignId: campaign.id, fee: entryFee } });
+                  toast.success(entryFee ? `You're in — ${entryFee.toLocaleString()} Spark Coins redeemed.` : "You're in — free entry confirmed.");
+                } catch (error) {
+                  toast.error(error instanceof Error ? error.message : "Entry could not be completed");
+                } finally { setEntryBusy(false); }
+              }}
+            >
+              {entryBusy ? "Joining…" : entryFee ? `Join for ${entryFee.toLocaleString()} Coins` : "Join for free"}
+            </Button>
           </div>
         </section>
 
