@@ -11,13 +11,13 @@ const CampaignOverrideInput = z.object({
 
 function fanAliasPayload(campaignId: string, payload: Record<string, unknown>) {
   if (campaignId !== "c-bnxn") return null;
-  const endsAt = typeof payload.endsAt === "string" ? payload.endsAt : undefined;
+  const endsAt = typeof payload["endsAt"] === "string" ? payload["endsAt"] : undefined;
   return {
     ...payload,
-    title: typeof payload.name === "string" ? payload.name : undefined,
-    hero: typeof payload.cover === "string" ? payload.cover : undefined,
-    type: typeof payload.kind === "string" ? payload.kind : undefined,
-    live: payload.status === "live",
+    title: typeof payload["name"] === "string" ? payload["name"] : undefined,
+    hero: typeof payload["cover"] === "string" ? payload["cover"] : undefined,
+    type: typeof payload["kind"] === "string" ? payload["kind"] : undefined,
+    live: payload["status"] === "live",
     endsAt: endsAt ? new Date(`${endsAt}T23:59:59.000Z`).toISOString() : undefined,
   };
 }
