@@ -117,6 +117,8 @@ export type Campaign = {
   participants: number;
   actions: number;
   prize: string;
+  entryMode?: "free" | "coins";
+  entryFee?: number;
   album?: AlbumInfo;
   streams: { platform: string; track: string; url: string; points: number }[];
   quiz: { title: string; subtitle: string; questions: QuizQuestion[] };

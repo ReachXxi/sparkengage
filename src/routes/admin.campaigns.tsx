@@ -62,6 +62,8 @@ function emptyCampaign(tenantId: string): Campaign {
     rules: [{ id: "r1", label: "Correct quiz answer", value: 15, cap: 30 }],
     targeting: ["Nigeria"],
     prize: "",
+    entryMode: "free",
+    entryFee: 0,
     participants: 0,
     actions: 0,
     pointsIssued: 0,
@@ -385,6 +387,35 @@ function CampaignEditor({
                 ))}
               </select>
             </label>
+          </div>
+
+          <div className="rounded-2xl border border-brand/15 bg-brand/5 p-4">
+            <p className="text-sm font-semibold text-ink">Campaign entry</p>
+            <p className="mt-1 text-xs text-ink-2">Choose whether fans join freely or redeem Spark Coins before participating.</p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <label className="block text-sm font-semibold text-ink">
+                Entry type
+                <select
+                  value={draft.entryMode ?? "free"}
+                  onChange={(e) => set("entryMode", e.target.value as Campaign["entryMode"])}
+                  className="mt-1 h-10 w-full rounded-xl border border-input bg-background px-3 text-sm"
+                >
+                  <option value="free">Free entry</option>
+                  <option value="coins">Spark Coins entry</option>
+                </select>
+              </label>
+              <label className="block text-sm font-semibold text-ink">
+                Spark Coins fee
+                <Input
+                  type="number"
+                  min="0"
+                  value={draft.entryFee ?? 0}
+                  disabled={(draft.entryMode ?? "free") === "free"}
+                  onChange={(e) => set("entryFee", Math.max(0, Number(e.target.value) || 0))}
+                  className="mt-1 rounded-xl"
+                />
+              </label>
+            </div>
           </div>
 
           <label className="block text-sm font-semibold text-ink">

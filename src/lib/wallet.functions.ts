@@ -60,6 +60,28 @@ export const buySparkCoins = createServerFn({ method: "POST" })
     return { balance: wallet.balance, paymentRequired: true, checkoutReady: false };
   });
 
+export const redeemSparkCoins = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => z.object({ title: z.string().trim().min(1).max(120), amount: z.number().int().min(1).max(100000) }).parse(input))
+  .handler(async ({ data }) => {
+    const { wallet, db } = await getWallet();
+    if (wallet.balance < data.amount) throw new Error("Not enough Spark Coins for this redemption");
+    const nextBalance = wallet.balance - data.amount;
+    const { error: walletError } = await db
+      .from("coin_wallets")
+      .update({ balance: nextBalance })
+      .eq("id", wallet.id)
+      .eq("balance", wallet.balance);
+    if (walletError) throw new Error(walletError.message);
+    const { error } = await db.from("coin_transactions").insert({
+      wallet_id: wallet.id,
+      type: "redemption",
+      amount: -data.amount,
+      description: `Redeemed ${data.title}`,
+    });
+    if (error) throw new Error(error.message);
+    return { ok: true as const, balance: nextBalance };
+  });
+
 export const enterCampaignWithCoins = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => z.object({ campaignId: z.string().min(1).max(120), fee: z.number().int().min(0).max(100000) }).parse(input))
   .handler(async ({ data }) => {
