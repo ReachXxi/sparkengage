@@ -1,4 +1,4 @@
-import { generateText, Output } from "ai";
+import { generateText } from "ai";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
@@ -29,6 +29,50 @@ const ApplyProposalInput = z.object({
   password: z.string().min(1).max(200),
   proposal: CampaignProposalSchema,
 });
+
+function parseProposal(text: string): CampaignProposal {
+  const candidate = text.match(/\{[\s\S]*\}/)?.[0];
+  if (!candidate) {
+    return {
+      hasProposal: false,
+      reply: text.trim(),
+      name: null,
+      description: null,
+      kind: null,
+      status: null,
+      entryMode: null,
+      entryFee: null,
+      startsAt: null,
+      endsAt: null,
+      creator: null,
+      genre: null,
+      prize: null,
+      modules: [],
+      targeting: [],
+    };
+  }
+  try {
+    return CampaignProposalSchema.parse(JSON.parse(candidate));
+  } catch {
+    return {
+      hasProposal: false,
+      reply: text.trim(),
+      name: null,
+      description: null,
+      kind: null,
+      status: null,
+      entryMode: null,
+      entryFee: null,
+      startsAt: null,
+      endsAt: null,
+      creator: null,
+      genre: null,
+      prize: null,
+      modules: [],
+      targeting: [],
+    };
+  }
+}
 
 export const getBuilderHistory = createServerFn({ method: "GET" }).handler(async () => {
   await requireAdminSession();
@@ -63,19 +107,17 @@ export const askCampaignBuilder = createServerFn({ method: "POST" })
       "Ask only the next most useful question until you have name, activity, entry model, fee, dates, rewards, rules, participant cap, and P2P setting.",
       "Validate dates, non-negative coin fees, and sensible participant limits. Never claim a change was saved.",
       "When ready, set hasProposal to true and summarize the exact proposed changes. Before that, set hasProposal to false and ask the next useful question.",
-      "Keep answers concise, practical, and structured for a live preview. Do not expose secrets or invent payment confirmations. Return only the requested JSON object.",
+      "Keep answers concise, practical, and structured for a live preview. Do not expose secrets or invent payment confirmations. Return only valid JSON with exactly these keys: hasProposal, reply, name, description, kind, status, entryMode, entryFee, startsAt, endsAt, creator, genre, prize, modules, targeting. Use null for unknown scalar values and [] for unknown lists.",
       ...history.map((item) => `${item.role.toUpperCase()}: ${item.content}`),
       `USER: ${data.message}`,
     ].join("\n");
 
     const result = await generateText({
       model: createLovableAiGatewayProvider(apiKey)("google/gemini-3.7-flash"),
-      output: Output.object({ schema: CampaignProposalSchema }),
       prompt,
       maxOutputTokens: 900,
     });
-    const proposal = result.output;
-    if (!proposal) throw new Error("The assistant did not return a valid proposal");
+    const proposal = parseProposal(result.text);
     const insertError = await supabaseAdmin.from("campaign_builder_messages").insert([
       { session_key: "primary", role: "user", content: data.message },
       { session_key: "primary", role: "assistant", content: `${proposal.reply}\nPROPOSAL: ${JSON.stringify(proposal)}` },
