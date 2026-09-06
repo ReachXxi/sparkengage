@@ -3,7 +3,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
 import { getAdminSession, passwordMatches, requireAdminSession } from "./admin-auth.server";
-import { persistCampaignOverride } from "./campaign-overrides.server";
 
 const BuilderInput = z.object({ message: z.string().trim().min(1).max(2000) });
 const CampaignProposalSchema = z.object({
@@ -93,6 +92,7 @@ export const applyCampaignBuilderProposal = createServerFn({ method: "POST" })
     if (!expected || !passwordMatches(data.password, expected)) {
       throw new Error("Admin password is incorrect");
     }
+    const { persistCampaignOverride } = await import("./campaign-overrides.server");
     const payload = Object.fromEntries(
       Object.entries(data.proposal).filter(([key, value]) =>
         key !== "hasProposal" && key !== "reply" && value !== null,

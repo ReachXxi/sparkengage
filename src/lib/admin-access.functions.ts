@@ -1,7 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { getAdminSession, passwordMatches, requireAdminSession } from "./admin-auth.server";
-import { persistCampaignOverride } from "./campaign-overrides.server";
 
 const PasswordInput = z.object({ password: z.string().min(1).max(200) });
 const CampaignOverrideInput = z.object({
@@ -35,6 +34,7 @@ export const saveCampaignOverride = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => CampaignOverrideInput.parse(input))
   .handler(async ({ data }) => {
     await requireAdminSession();
+    const { persistCampaignOverride } = await import("./campaign-overrides.server");
     await persistCampaignOverride(data.campaignId, data.payload);
     return { ok: true as const };
   });
