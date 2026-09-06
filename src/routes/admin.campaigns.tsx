@@ -19,7 +19,7 @@ import { draftCampaign, draftCampaignCopy, draftRewards, draftSurveyQuestions } 
 import { moduleOptions, targetingOptions, type Campaign, type CampaignStatus } from "@/data/console";
 import { DataTable, PageHeader, Panel, Pill, Td, nf } from "@/components/admin/ConsoleUI";
 import { cn } from "@/lib/utils";
-import { askCampaignBuilder, getBuilderHistory } from "@/lib/campaign-builder.functions";
+import { applyCampaignBuilderProposal, askCampaignBuilder, getBuilderHistory, type CampaignProposal } from "@/lib/campaign-builder.functions";
 import { useServerFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/admin/campaigns")({
@@ -79,9 +79,14 @@ function Campaigns() {
   );
   const [filter, setFilter] = useState<"all" | CampaignStatus>("all");
   const askBuilder = useServerFn(askCampaignBuilder);
+  const applyBuilderProposal = useServerFn(applyCampaignBuilderProposal);
   const loadBuilderHistory = useServerFn(getBuilderHistory);
   const [builderMessage, setBuilderMessage] = useState("");
   const [builderReply, setBuilderReply] = useState("");
+  const [builderProposal, setBuilderProposal] = useState<CampaignProposal | null>(null);
+  const [proposalCampaignId, setProposalCampaignId] = useState("");
+  const [proposalPassword, setProposalPassword] = useState("");
+  const [proposalBusy, setProposalBusy] = useState(false);
   const [builderBusy, setBuilderBusy] = useState(false);
   useEffect(() => { void loadBuilderHistory().then((history) => setBuilderReply(history.at(-1)?.role === "assistant" ? history.at(-1)?.content ?? "" : "")); }, [loadBuilderHistory]);
 
@@ -131,10 +136,37 @@ function Campaigns() {
         <div className="mb-4 rounded-2xl border border-brand/15 bg-white p-4">
           <p className="text-xs font-bold uppercase tracking-wider text-highlight">One ongoing conversation</p>
           <p className="mt-1 text-sm text-ink-2">Ask for setup guidance, revisions, validation, entry rules, P2P games or rewards. The assistant only proposes changes; it never publishes without your review.</p>
-          {builderReply && <div className="mt-3 whitespace-pre-wrap rounded-xl bg-brand/5 p-3 text-sm text-ink-2">{builderReply}</div>}
+           {builderReply && <div className="mt-3 whitespace-pre-wrap rounded-xl bg-brand/5 p-3 text-sm text-ink-2">{builderReply}</div>}
+           {builderProposal?.hasProposal && (
+             <div className="mt-3 space-y-3 rounded-2xl border border-highlight/25 bg-highlight/5 p-4">
+               <div><p className="text-xs font-bold uppercase tracking-wider text-highlight">Preview only — not live yet</p><p className="mt-1 text-sm text-ink-2">Review these proposed fields. Applying them requires the admin password again.</p></div>
+               <div className="grid gap-2 text-sm sm:grid-cols-2">
+                 {Object.entries(builderProposal).filter(([key, value]) => !["hasProposal", "reply", "modules", "targeting"].includes(key) && value !== null && value !== "").map(([key, value]) => <div key={key} className="rounded-xl bg-white px-3 py-2"><span className="font-semibold capitalize">{key.replace(/([A-Z])/g, " $1")}: </span>{String(value)}</div>)}
+                 {builderProposal.modules.length > 0 && <div className="rounded-xl bg-white px-3 py-2 sm:col-span-2"><span className="font-semibold">Modules: </span>{builderProposal.modules.join(", ")}</div>}
+                 {builderProposal.targeting.length > 0 && <div className="rounded-xl bg-white px-3 py-2 sm:col-span-2"><span className="font-semibold">Targeting: </span>{builderProposal.targeting.join(", ")}</div>}
+               </div>
+               <div className="grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
+                 <select value={proposalCampaignId || campaigns[0]?.id || ""} onChange={(event) => setProposalCampaignId(event.target.value)} className="h-10 rounded-xl border border-input bg-background px-3 text-sm"><option value="" disabled>Choose campaign</option>{campaigns.map((campaign) => <option key={campaign.id} value={campaign.id}>{campaign.name || "Untitled campaign"}</option>)}</select>
+                 <Input type="password" value={proposalPassword} onChange={(event) => setProposalPassword(event.target.value)} placeholder="Re-enter admin password" autoComplete="current-password" />
+                 <Button disabled={proposalBusy || !proposalPassword || !(proposalCampaignId || campaigns[0]?.id)} className="rounded-full bg-brand-gradient font-bold text-white" onClick={async () => {
+                   const campaignId = proposalCampaignId || campaigns[0]?.id;
+                   if (!campaignId || !builderProposal) return;
+                   setProposalBusy(true);
+                   try {
+                     const result = await applyBuilderProposal({ data: { campaignId, password: proposalPassword, proposal: builderProposal } });
+                     const target = campaigns.find((campaign) => campaign.id === campaignId);
+                     if (target) actions.saveCampaign({ ...target, ...(result.payload as Partial<Campaign>) });
+                     setProposalPassword("");
+                     toast.success("Proposal applied and published to the fan app.");
+                   } catch (error) { toast.error(error instanceof Error ? error.message : "Proposal could not be applied"); }
+                   finally { setProposalBusy(false); }
+                 }}>{proposalBusy ? "Applying…" : "Confirm & apply"}</Button>
+               </div>
+             </div>
+           )}
           <div className="mt-3 flex gap-2">
             <Input value={builderMessage} onChange={(event) => setBuilderMessage(event.target.value)} placeholder="e.g. Make this a 50-Coin P2P quiz with 7 days and 100 winners" />
-            <Button disabled={builderBusy || !builderMessage.trim()} className="shrink-0 rounded-full bg-brand-gradient font-bold text-white" onClick={async () => { setBuilderBusy(true); try { const result = await askBuilder({ data: { message: builderMessage } }); setBuilderReply(result.reply); setBuilderMessage(""); toast.success("Assistant updated the campaign proposal."); } catch (error) { toast.error(error instanceof Error ? error.message : "Assistant unavailable"); } finally { setBuilderBusy(false); } }}>{builderBusy ? "Thinking…" : "Ask assistant"}</Button>
+             <Button disabled={builderBusy || !builderMessage.trim()} className="shrink-0 rounded-full bg-brand-gradient font-bold text-white" onClick={async () => { setBuilderBusy(true); try { const result = await askBuilder({ data: { message: builderMessage } }); setBuilderReply(result.reply); setBuilderProposal(result.proposal); setBuilderMessage(""); toast.success("Assistant updated the campaign proposal."); } catch (error) { toast.error(error instanceof Error ? error.message : "Assistant unavailable"); } finally { setBuilderBusy(false); } }}>{builderBusy ? "Thinking…" : "Ask assistant"}</Button>
           </div>
         </div>
         <Textarea
