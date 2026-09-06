@@ -2,9 +2,77 @@ import { generateText } from "ai";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
-import { requireAdminSession } from "./admin-auth.server";
+import { getAdminSession, passwordMatches, requireAdminSession } from "./admin-auth.server";
 
 const BuilderInput = z.object({ message: z.string().trim().min(1).max(2000) });
+const CampaignProposalSchema = z.object({
+  hasProposal: z.boolean(),
+  reply: z.string(),
+  name: z.string().nullable(),
+  description: z.string().nullable(),
+  kind: z.enum(["album", "movie", "book"]).nullable(),
+  status: z.enum(["draft", "scheduled", "live", "ended"]).nullable(),
+  entryMode: z.enum(["free", "coins"]).nullable(),
+  entryFee: z.number().nullable(),
+  startsAt: z.string().nullable(),
+  endsAt: z.string().nullable(),
+  creator: z.string().nullable(),
+  genre: z.string().nullable(),
+  prize: z.string().nullable(),
+  modules: z.array(z.string()),
+  targeting: z.array(z.string()),
+});
+export type CampaignProposal = z.infer<typeof CampaignProposalSchema>;
+
+const ApplyProposalInput = z.object({
+  campaignId: z.string().min(1).max(120),
+  password: z.string().min(1).max(200),
+  proposal: CampaignProposalSchema,
+});
+
+function parseProposal(text: string): CampaignProposal {
+  const candidate = text.match(/\{[\s\S]*\}/)?.[0];
+  if (!candidate) {
+    return {
+      hasProposal: false,
+      reply: text.trim(),
+      name: null,
+      description: null,
+      kind: null,
+      status: null,
+      entryMode: null,
+      entryFee: null,
+      startsAt: null,
+      endsAt: null,
+      creator: null,
+      genre: null,
+      prize: null,
+      modules: [],
+      targeting: [],
+    };
+  }
+  try {
+    return CampaignProposalSchema.parse(JSON.parse(candidate));
+  } catch {
+    return {
+      hasProposal: false,
+      reply: text.trim(),
+      name: null,
+      description: null,
+      kind: null,
+      status: null,
+      entryMode: null,
+      entryFee: null,
+      startsAt: null,
+      endsAt: null,
+      creator: null,
+      genre: null,
+      prize: null,
+      modules: [],
+      targeting: [],
+    };
+  }
+}
 
 export const getBuilderHistory = createServerFn({ method: "GET" }).handler(async () => {
   await requireAdminSession();
@@ -38,8 +106,8 @@ export const askCampaignBuilder = createServerFn({ method: "POST" })
       "You are SPARKFAN's campaign manager. Help a creator configure a fan campaign.",
       "Ask only the next most useful question until you have name, activity, entry model, fee, dates, rewards, rules, participant cap, and P2P setting.",
       "Validate dates, non-negative coin fees, and sensible participant limits. Never claim a change was saved.",
-      "When ready, summarize the exact proposed changes under PROPOSED CHANGES and ask the admin to type Confirm and then provide the admin password.",
-      "Keep answers concise, practical, and structured for a live preview. Do not expose secrets or invent payment confirmations.",
+      "When ready, set hasProposal to true and summarize the exact proposed changes. Before that, set hasProposal to false and ask the next useful question.",
+      "Keep answers concise, practical, and structured for a live preview. Do not expose secrets or invent payment confirmations. Return only valid JSON with exactly these keys: hasProposal, reply, name, description, kind, status, entryMode, entryFee, startsAt, endsAt, creator, genre, prize, modules, targeting. Use null for unknown scalar values and [] for unknown lists.",
       ...history.map((item) => `${item.role.toUpperCase()}: ${item.content}`),
       `USER: ${data.message}`,
     ].join("\n");
@@ -49,10 +117,30 @@ export const askCampaignBuilder = createServerFn({ method: "POST" })
       prompt,
       maxOutputTokens: 900,
     });
+    const proposal = parseProposal(result.text);
     const insertError = await supabaseAdmin.from("campaign_builder_messages").insert([
       { session_key: "primary", role: "user", content: data.message },
-      { session_key: "primary", role: "assistant", content: result.text },
+      { session_key: "primary", role: "assistant", content: `${proposal.reply}\nPROPOSAL: ${JSON.stringify(proposal)}` },
     ]);
     if (insertError.error) throw new Error(insertError.error.message);
-    return { reply: result.text };
+    return { reply: proposal.reply, proposal };
+  });
+
+export const applyCampaignBuilderProposal = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => ApplyProposalInput.parse(input))
+  .handler(async ({ data }) => {
+    await requireAdminSession();
+    const expected = process.env["SITE_PASSWORD"];
+    if (!expected || !passwordMatches(data.password, expected)) {
+      throw new Error("Admin password is incorrect");
+    }
+    const { persistCampaignOverride } = await import("./campaign-overrides.server");
+    const payload = Object.fromEntries(
+      Object.entries(data.proposal).filter(([key, value]) =>
+        key !== "hasProposal" && key !== "reply" && value !== null,
+      ),
+    );
+    await persistCampaignOverride(data.campaignId, payload);
+    const session = await getAdminSession();
+    return { ok: true as const, payload, sessionUnlocked: Boolean(session.data.unlocked) };
   });
